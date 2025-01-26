@@ -1,4 +1,3 @@
-import styles from '../styles/Home.module.css';
 import type { MouseEvent } from 'react';
 import type { Player, UpdatePlayerProps } from './KillerDart';
 
@@ -24,7 +23,7 @@ const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
 
   const handleScoreChange = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const target = e.target as HTMLButtonElement;
+    // const target = e.target as HTMLButtonElement;
 
     const score =
       operator === 'plus'
@@ -35,16 +34,21 @@ const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
       score,
     });
 
-    target.classList.add(styles.animateScoreButton);
+    // target.classList.add(styles.animateScoreButton);
     setTimeout(() => {
-      target.classList.remove(styles.animateScoreButton);
+      // target.classList.remove(styles.animateScoreButton);
     }, 300);
   };
 
   return (
-    <button className={styles.scoreButton} onClick={handleScoreChange}>
-      <span className={styles.scoreButtonSpan}></span>
-      {operator === 'plus' && <span className={styles.scoreButtonSpan}></span>}
+    <button
+      className="h-full w-full text-white text-4xl flex justify-center touch-manipulation"
+      onClick={handleScoreChange}
+    >
+      <span className="h-[2px] w-4 bg-white inline-block absolute self-center"></span>
+      {operator === 'plus' && (
+        <span className="h-[2px] w-4 bg-white inline-block absolute self-center rotate-90"></span>
+      )}
     </button>
   );
 };

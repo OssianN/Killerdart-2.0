@@ -6,10 +6,8 @@ import React, {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { GameSettings } from '../components/GameSettings';
-import Form from '../components/Form';
+import { GameSettings } from './GameSettings';
 import PlayersList from '../components/PlayersList';
-import styles from '../styles/Home.module.css';
 import type { PlayerData } from './VideoStream';
 
 export type Player = {
@@ -87,21 +85,24 @@ export const KillerDart = ({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const localList = JSON.parse(localStorage.getItem('players') ?? '') ?? [];
+    const storage = localStorage.getItem('players');
+    const localList = storage ? JSON.parse(storage) : [];
     setPlayers(localList);
   }, []);
 
   return (
-    <div className={styles.container}>
-      <GameSettings handleClearStats={handleClearStats} />
+    <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
+      <GameSettings
+        handleClearStats={handleClearStats}
+        setPlayers={setPlayers}
+        setLocalStorage={setLocalStorage}
+      />
       <PlayersList
         players={players}
         updatePlayer={updatePlayer}
         setPlayers={setPlayers}
         setLocalStorage={setLocalStorage}
       />
-      <Form setPlayers={setPlayers} setLocalStorage={setLocalStorage} />
     </div>
   );
 };

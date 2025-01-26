@@ -1,6 +1,6 @@
 import {
   useState,
-  useLayoutEffect,
+  // useLayoutEffect,
   ChangeEvent,
   type Dispatch,
   type SetStateAction,
@@ -9,7 +9,7 @@ import { useSwipeable } from 'react-swipeable';
 import DartContainer from './DartContainer';
 import ScoreButton from './ScoreButton';
 import { motion } from 'framer-motion';
-import styles from '../styles/Home.module.css';
+import { Input } from './ui/input';
 import type { Player, UpdatePlayerProps } from './KillerDart';
 
 type PlayerProps = {
@@ -26,17 +26,17 @@ export const PlayerItem = ({
   setLocalStorage,
 }: PlayerProps) => {
   const [showRemove, setShowRemove] = useState(false);
-  const [animateListItem, setAnimateListItem] = useState(false);
+  // const [animateListItem, setAnimateListItem] = useState(false);
 
-  const setBackgroundOnScore = (player: Player) => {
-    if (player.score === 5) {
-      return '#FF4242';
-    }
+  // const setBackgroundOnScore = (player: Player) => {
+  //   if (player.score === 5) {
+  //     return '#FF4242';
+  //   }
 
-    if (player.isDead) {
-      return '#47abd8';
-    }
-  };
+  //   if (player.isDead) {
+  //     return '#47abd8';
+  //   }
+  // };
 
   const handlers = useSwipeable({
     onSwipedLeft: () => setShowRemove(true),
@@ -62,40 +62,38 @@ export const PlayerItem = ({
     updatePlayer(player.id, { number: Number(value) });
   };
 
-  useLayoutEffect(() => {
-    if (player.isDead || player.score === 5) {
-      setAnimateListItem(true);
+  // useLayoutEffect(() => {
+  //   if (player.isDead || player.score === 5) {
+  //     setAnimateListItem(true);
 
-      setTimeout(() => {
-        setAnimateListItem(false);
-      }, 600);
-    }
-  }, [player.isDead, player.score]);
+  //     setTimeout(() => {
+  //       setAnimateListItem(false);
+  //     }, 600);
+  //   }
+  // }, [player.isDead, player.score]);
 
   return (
     <motion.li
       key={player.id}
-      className={`${styles.playerItem} ${
-        animateListItem ? styles.animateListItem : ''
-      }`}
-      style={{
-        background: setBackgroundOnScore(player),
-        transform: showRemove ? 'translateX(-250px)' : 'translateX(0)',
-      }}
+      // style={{
+      //   background: setBackgroundOnScore(player),
+      //   transform: showRemove ? 'translateX(-250px)' : 'translateX(0)',
+      // }}
+      className="relative flex flex-col items-center w-full bg-[#a1e3ff] text-white l mx-auto max-w-[400px] shadow-md rounded-md transition-all duration-300"
       {...handlers}
       animate={{ opacity: 1, x: 0 }}
       layout
       transition={{ stiffness: 500, damping: 30 }}
     >
       <header
-        className={styles.playerHeader}
+        className="flex justify-between items-center w-full p-4"
         style={{
           opacity: player.isDead ? 0.3 : 1,
         }}
       >
-        <h3 className={styles.playerName}>{player.name}</h3>
-        <input
-          className={styles.playerTargetInput}
+        <h3 className="text-xl font-medium">{player.name}</h3>
+        <Input
+          className="webkit-appearance-none bg-none w-16 text-xl font-medium text-center text-white border-2 border-solid border-white p-0.5 rounded-md"
           type="numeric"
           pattern="[0-9]*"
           placeholder="--"
@@ -104,7 +102,7 @@ export const PlayerItem = ({
         />
       </header>
       <div
-        className={styles.playersContent}
+        className="flex items-center justify-center w-full h-20 gap-4 p-1"
         style={{
           opacity: player.isDead ? 0.3 : 1,
         }}
@@ -123,10 +121,10 @@ export const PlayerItem = ({
           updatePlayer={updatePlayer}
         />
       </div>
-      <p className={styles.playerWinsParagraph}>W: {player.wins}</p>
+      <p>Wins: {player.wins}</p>
 
       <button
-        className={styles.removePlayerButton}
+        className="absolute border-2 rounded-md p-2 m-1 bg-[#ff4242] text-white font-semibold"
         style={{
           transform: showRemove ? 'translateX(250px)' : 'translateX(300px)',
           opacity: !showRemove ? '0' : '1',

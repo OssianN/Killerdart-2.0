@@ -5,15 +5,19 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import styles from '../styles/Home.module.css';
 import type { Player } from './KillerDart';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 type FormComponentProps = {
   setPlayers: Dispatch<SetStateAction<Player[]>>;
   setLocalStorage: (players: Player[]) => void;
 };
 
-const FormComponent = ({ setPlayers, setLocalStorage }: FormComponentProps) => {
+export const NewPlayerForm = ({
+  setPlayers,
+  setLocalStorage,
+}: FormComponentProps) => {
   const [input, setInput] = useState({
     name: '',
   });
@@ -44,9 +48,12 @@ const FormComponent = ({ setPlayers, setLocalStorage }: FormComponentProps) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <input
-        className={styles.formInput}
+    <form
+      className="relative flex w-full shadow-sm rounded-md mb-2"
+      onSubmit={handleSubmit}
+    >
+      <Input
+        className="border-[#a1e3ff] rounded-r-none border-r-none text-[#a1e3ff] placeholder-[#a1e3ff] shadow-none"
         name="name"
         type="text"
         value={input.name}
@@ -54,11 +61,9 @@ const FormComponent = ({ setPlayers, setLocalStorage }: FormComponentProps) => {
         placeholder="Add player..."
         maxLength={12}
       />
-      <button className={styles.submitButton} type="submit">
+      <Button className="bg-[#a1e3ff] rounded-l-none shadow-none" type="submit">
         &#43;
-      </button>
+      </Button>
     </form>
   );
 };
-
-export default FormComponent;

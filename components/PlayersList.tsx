@@ -1,7 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { PlayerItem } from './Player';
 import { AnimatePresence } from 'framer-motion';
-import styles from '../styles/Home.module.css';
 import type { Player, UpdatePlayerProps } from './KillerDart';
 
 type PlayersListProps = {
@@ -41,7 +40,7 @@ const PlayersList = ({
 
   return (
     <AnimatePresence>
-      <ul className={styles.playersList}>
+      <ul className="flex flex-col w-full gap-2">
         {players.map(player => (
           <PlayerItem
             key={player.id}
