@@ -1,5 +1,6 @@
 'use client';
 import { getServerSideProps } from '@/actions/getServersideProps';
+import type { PlayerData } from '@/components/VideoStream';
 import {
   type Dispatch,
   type SetStateAction,
@@ -9,12 +10,7 @@ import {
 } from 'react';
 
 type UseSocketProps = {
-  onMessage: Dispatch<
-    SetStateAction<{
-      player: string;
-      points: string;
-    } | null>
-  >;
+  onMessage: Dispatch<SetStateAction<PlayerData | null>>;
 };
 
 export const useSocket = ({ onMessage }: UseSocketProps) => {
@@ -43,7 +39,13 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
 
     socket.onmessage = message => {
       const { player, points } = JSON.parse(message.data);
-      onMessage({ player, points });
+      onMessage(prev => {
+        if (prev && prev.player === player && prev.points === points) {
+          return prev;
+        }
+
+        return { player: Number(player), points: Number(points) };
+      });
     };
 
     socket.onclose = () => {

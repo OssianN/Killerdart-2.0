@@ -1,38 +1,31 @@
 'use client';
+import { useDebouncedState } from '@/hooks/useDebouncedState';
+import { useSendVideoData } from '@/hooks/useSendVideoData';
 import { useSocket } from '@/hooks/useSocket';
-import { useEffect, useRef, useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-export const VideoStream = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [data, setData] = useState<{ player: string; points: string } | null>(
-    null
-  );
-  const [stream, setStream] = useState<MediaStream | null>(null);
+export type PlayerData = {
+  player: number;
+  points: number;
+};
+
+type VideoStreamProps = {
+  setConfirmedData: Dispatch<SetStateAction<PlayerData | null>>;
+};
+
+export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [data, setData] = useState<PlayerData | null>(null);
   const { socket, isConnected } = useSocket({ onMessage: setData });
-
-  useEffect(() => {
-    if (!isConnected || !videoRef.current || !stream) return;
-    const intervalId = setInterval(() => {
-      try {
-        const canvas = document.createElement('canvas');
-        const video = videoRef.current;
-
-        canvas.width = video?.videoWidth ?? 0;
-        canvas.height = video?.videoHeight ?? 0;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx || !video) return;
-
-        ctx.drawImage(video, 0, 0);
-        const base64Frame = canvas.toDataURL('image/jpeg');
-        socket.send(base64Frame);
-      } catch (error) {
-        console.error('Error sending frame:', error);
-      }
-    }, 200);
-
-    return () => clearInterval(intervalId);
-  }, [isConnected, socket, stream]);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  useDebouncedState<PlayerData | null>({ data, setConfirmedData, delay: 1000 });
+  useSendVideoData({ videoRef, stream, isConnected, socket });
 
   useEffect(() => {
     return () => {
@@ -77,7 +70,6 @@ export const VideoStream = () => {
         <video
           ref={videoRef}
           autoPlay
-          playsInline
           className={`-scale-x-100 w-full h-full rounded-xl ${
             !stream ? 'hidden' : ''
           }`}
