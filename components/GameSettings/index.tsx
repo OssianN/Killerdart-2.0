@@ -1,6 +1,10 @@
 import styles from './gameSettings.module.css';
 
-const index = ({ handleClearStats }) => {
+type GameSettingsProps = {
+  handleClearStats: () => void;
+};
+
+export const GameSettings = ({ handleClearStats }: GameSettingsProps) => {
   return (
     <section className={styles.container}>
       <button
@@ -12,5 +16,3 @@ const index = ({ handleClearStats }) => {
     </section>
   );
 };
-
-export default index;

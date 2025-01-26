@@ -6,7 +6,7 @@ import React, {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import GameSettings from '../components/GameSettings';
+import { GameSettings } from '../components/GameSettings';
 import Form from '../components/Form';
 import PlayersList from '../components/PlayersList';
 import styles from '../styles/Home.module.css';
