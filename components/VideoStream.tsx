@@ -24,7 +24,7 @@ export const VideoStream = () => {
         if (!ctx || !video) return;
 
         ctx.drawImage(video, 0, 0);
-        const base64Frame = canvas.toDataURL('image/jpeg;base64');
+        const base64Frame = canvas.toDataURL('image/jpeg');
         socket.send(base64Frame);
       } catch (error) {
         console.error('Error sending frame:', error);
