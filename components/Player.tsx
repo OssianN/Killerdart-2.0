@@ -1,15 +1,15 @@
 import {
-  useState,
-  // useLayoutEffect,
   ChangeEvent,
+  useLayoutEffect,
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { useSwipeable } from 'react-swipeable';
 import DartContainer from './DartContainer';
 import ScoreButton from './ScoreButton';
-import { motion } from 'framer-motion';
+import { motion, useAnimate } from 'framer-motion';
 import { Input } from './ui/input';
+import { ArcheryMatch, Crown } from 'iconoir-react';
+import { Button } from './ui/button';
 import type { Player, UpdatePlayerProps } from './KillerDart';
 
 type PlayerProps = {
@@ -25,24 +25,7 @@ export const PlayerItem = ({
   setPlayers,
   setLocalStorage,
 }: PlayerProps) => {
-  const [showRemove, setShowRemove] = useState(false);
-  // const [animateListItem, setAnimateListItem] = useState(false);
-
-  // const setBackgroundOnScore = (player: Player) => {
-  //   if (player.score === 5) {
-  //     return '#FF4242';
-  //   }
-
-  //   if (player.isDead) {
-  //     return '#47abd8';
-  //   }
-  // };
-
-  const handlers = useSwipeable({
-    onSwipedLeft: () => setShowRemove(true),
-    onSwipedRight: () => setShowRemove(false),
-    trackMouse: true,
-  });
+  const [scope, animate] = useAnimate();
 
   const handleRemovePlayer = () => {
     setPlayers(prev => {
@@ -62,51 +45,57 @@ export const PlayerItem = ({
     updatePlayer(player.id, { number: Number(value) });
   };
 
-  // useLayoutEffect(() => {
-  //   if (player.isDead || player.score === 5) {
-  //     setAnimateListItem(true);
-
-  //     setTimeout(() => {
-  //       setAnimateListItem(false);
-  //     }, 600);
-  //   }
-  // }, [player.isDead, player.score]);
+  useLayoutEffect(() => {
+    if (player.isDead || player.score === 5) {
+      animate(
+        scope.current,
+        {
+          scale: player.isDead ? [0.5, 1] : [2, 1],
+          transition: {
+            duration: 0.5,
+          },
+        },
+        { stiffness: 100, damping: 5, type: 'spring' }
+      );
+    }
+  }, [animate, player.isDead, player.score, scope]);
 
   return (
     <motion.li
-      key={player.id}
-      // style={{
-      //   background: setBackgroundOnScore(player),
-      //   transform: showRemove ? 'translateX(-250px)' : 'translateX(0)',
-      // }}
-      className="relative flex flex-col items-center w-full bg-[#a1e3ff] text-white l mx-auto max-w-[400px] shadow-md rounded-md transition-all duration-300"
-      {...handlers}
-      animate={{ opacity: 1, x: 0 }}
-      layout
-      transition={{ stiffness: 500, damping: 30 }}
+      ref={scope}
+      className={`relative flex flex-col items-center w-full px-6 bg-[#a1e3ff] text-white mx-auto max-w-[400px] shadow-md rounded-md transition-all duration-300 ${
+        player.isDead
+          ? 'bg-[#47abd8]'
+          : player.score === 5
+          ? 'bg-[#ff4242]'
+          : ''
+      }`}
     >
       <header
-        className="flex justify-between items-center w-full p-4"
+        className="flex justify-between items-center w-full py-3 border-b border-[#ffffff99] border-solid"
         style={{
           opacity: player.isDead ? 0.3 : 1,
         }}
       >
-        <h3 className="text-xl font-medium">{player.name}</h3>
-        <Input
-          className="webkit-appearance-none bg-none w-16 text-xl font-medium text-center text-white border-2 border-solid border-white p-0.5 rounded-md"
-          type="numeric"
-          pattern="[0-9]*"
-          placeholder="--"
-          onChange={handlePlayerNumber}
-          value={player.number ? String(player.number) : ''}
-        />
+        <h3 className="text-lg flex-1 font-medium">{player.name}</h3>
+        <p className="flex flex-g items-center justify-center h-full gap-2">
+          <Crown />
+          <span className="text-lg font-medium">{player.wins}</span>
+        </p>
+        <div className="relative flex flex-1 items-center justify-end gap-2">
+          <Input
+            className="webkit-appearance-none bg-none w-16 text-lg md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-neutral-100"
+            type="numeric"
+            placeholder="#"
+            pattern="[0-9]*"
+            onChange={handlePlayerNumber}
+            value={player.number ? String(player.number) : ''}
+          />
+          <ArcheryMatch className="text-sm" />
+        </div>
       </header>
-      <div
-        className="flex items-center justify-center w-full h-20 gap-4 p-1"
-        style={{
-          opacity: player.isDead ? 0.3 : 1,
-        }}
-      >
+
+      <div className="flex items-center justify-center w-full h-16 gap-4 py-3">
         <ScoreButton
           player={player}
           operator={'minus'}
@@ -121,18 +110,17 @@ export const PlayerItem = ({
           updatePlayer={updatePlayer}
         />
       </div>
-      <p>Wins: {player.wins}</p>
 
-      <button
-        className="absolute border-2 rounded-md p-2 m-1 bg-[#ff4242] text-white font-semibold"
-        style={{
-          transform: showRemove ? 'translateX(250px)' : 'translateX(300px)',
-          opacity: !showRemove ? '0' : '1',
-        }}
+      <Button
+        className="absolute border-2 rounded-md p-2 m-1 bg-[#ff4242] text-white font-semibold hidden"
+        // style={{
+        //   transform: showRemove ? 'translateX(250px)' : 'translateX(300px)',
+        //   opacity: !showRemove ? '0' : '1',
+        // }}
         onClick={handleRemovePlayer}
       >
         Remove
-      </button>
+      </Button>
     </motion.li>
   );
 };

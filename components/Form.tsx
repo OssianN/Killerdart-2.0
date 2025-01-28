@@ -49,11 +49,11 @@ export const NewPlayerForm = ({
 
   return (
     <form
-      className="relative flex w-full shadow-sm rounded-md mb-2"
+      className="relative flex w-full shadow-sm rounded-md mt-6"
       onSubmit={handleSubmit}
     >
       <Input
-        className="border-[#a1e3ff] rounded-r-none border-r-none text-[#a1e3ff] placeholder-[#a1e3ff] shadow-none"
+        className="border-[#a1e3ff] border rounded-r-none border-r-none text-[#a1e3ff] placeholder-[#a1e3ff] shadow-none"
         name="name"
         type="text"
         value={input.name}
@@ -61,8 +61,11 @@ export const NewPlayerForm = ({
         placeholder="Add player..."
         maxLength={12}
       />
-      <Button className="bg-[#a1e3ff] rounded-l-none shadow-none" type="submit">
-        &#43;
+      <Button
+        className="w-16 bg-[#a1e3ff] rounded-l-none shadow-none"
+        type="submit"
+      >
+        Add
       </Button>
     </form>
   );

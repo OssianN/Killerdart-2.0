@@ -1,5 +1,5 @@
-import type { MouseEvent } from 'react';
 import type { Player, UpdatePlayerProps } from './KillerDart';
+import { motion, useAnimate } from 'framer-motion';
 
 type ScoreButtonProps = {
   player: Player;
@@ -8,23 +8,11 @@ type ScoreButtonProps = {
 };
 
 const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
-  const changeScore = (newValue: number) => {
-    if (newValue > 5) {
-      return 5;
-    }
+  const [scope, animate] = useAnimate();
+  const changeScore = (newValue: number) =>
+    newValue > 5 ? 5 : newValue < 0 ? 0 : newValue;
 
-    if (newValue < 0) {
-      player.active = true;
-      return 0;
-    }
-
-    return newValue;
-  };
-
-  const handleScoreChange = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    // const target = e.target as HTMLButtonElement;
-
+  const handleScoreChange = () => {
     const score =
       operator === 'plus'
         ? changeScore(player.score + 1)
@@ -34,14 +22,18 @@ const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
       score,
     });
 
-    // target.classList.add(styles.animateScoreButton);
-    setTimeout(() => {
-      // target.classList.remove(styles.animateScoreButton);
-    }, 300);
+    animate(scope.current, {
+      scale: [1, 0.5, 1],
+      rotate: operator === 'minus' ? [1, -90, 1] : [1, 90, 1],
+      transition: {
+        duration: 200,
+      },
+    });
   };
 
   return (
-    <button
+    <motion.button
+      ref={scope}
       className="h-full w-full text-white text-4xl flex justify-center touch-manipulation"
       onClick={handleScoreChange}
     >
@@ -49,7 +41,7 @@ const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
       {operator === 'plus' && (
         <span className="h-[2px] w-4 bg-white inline-block absolute self-center rotate-90"></span>
       )}
-    </button>
+    </motion.button>
   );
 };
 

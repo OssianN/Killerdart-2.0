@@ -9,6 +9,7 @@ import React, {
 import { GameSettings } from './GameSettings';
 import PlayersList from '../components/PlayersList';
 import type { PlayerData } from './VideoStream';
+import { NewPlayerForm } from './Form';
 
 export type Player = {
   id: number;
@@ -39,6 +40,7 @@ export const KillerDart = ({
 }: KillerDartProps) => {
   const [players, setPlayers] = useState<Player[]>([]);
 
+  // fix  <0 & >5
   const updatePlayer = useCallback(
     (id: number, updatePlayer: UpdatePlayerProps) => {
       const newList: Player[] = players.map(player => {
@@ -92,14 +94,14 @@ export const KillerDart = ({
 
   return (
     <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
-      <GameSettings
-        handleClearStats={handleClearStats}
-        setPlayers={setPlayers}
-        setLocalStorage={setLocalStorage}
-      />
+      <GameSettings handleClearStats={handleClearStats} />
       <PlayersList
         players={players}
         updatePlayer={updatePlayer}
+        setPlayers={setPlayers}
+        setLocalStorage={setLocalStorage}
+      />
+      <NewPlayerForm
         setPlayers={setPlayers}
         setLocalStorage={setLocalStorage}
       />

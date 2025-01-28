@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Button } from './ui/button';
 
 export type PlayerData = {
   player: number;
@@ -55,32 +56,28 @@ export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
 
   return (
     <div className="w-full flex flex-col gap-8 items-center justify-center">
-      <div>
+      {stream ? (
+        <Button className="button" onClick={stopCamera} disabled={!stream}>
+          Stop Camera
+        </Button>
+      ) : (
+        <Button className="w-32" onClick={startCamera}>
+          Start Camera
+        </Button>
+      )}
+
+      <div className="flex gap-6">
         <p>Player: {data?.player}</p>
         <p>Points: {data?.points}</p>
       </div>
 
-      <div className="flex items-center justify-center gap-4 border border-white-100 rounded-xl p-4 w-full max-w-[640px] min-h-[460px] flex-1">
-        {!stream && (
-          <button className="w-32" onClick={startCamera}>
-            Start Camera
-          </button>
-        )}
-
-        <video
-          ref={videoRef}
-          autoPlay
-          className={`-scale-x-100 w-full h-full rounded-xl ${
-            !stream ? 'hidden' : ''
-          }`}
-        />
-      </div>
-
-      {stream && (
-        <button className="button" onClick={stopCamera} disabled={!stream}>
-          Stop Camera
-        </button>
-      )}
+      <video
+        ref={videoRef}
+        autoPlay
+        className={`-scale-x-100 w-full h-full rounded-xl hidden ${
+          !stream ? 'hidden' : ''
+        }`}
+      />
     </div>
   );
 };
