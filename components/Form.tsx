@@ -1,30 +1,13 @@
-import {
-  useState,
-  type FormEvent,
-  type ChangeEvent,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
-import type { Player } from './KillerDart';
+import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { usePlayers } from '@/hooks/usePlayers';
 
-type FormComponentProps = {
-  setPlayers: Dispatch<SetStateAction<Player[]>>;
-  setLocalStorage: (players: Player[]) => void;
-};
-
-export const NewPlayerForm = ({
-  setPlayers,
-  setLocalStorage,
-}: FormComponentProps) => {
+export const NewPlayerForm = () => {
+  const { addNewPlayer } = usePlayers();
   const [input, setInput] = useState({
     name: '',
   });
-
-  const createNewPlayer = (name: string): Player => {
-    return { id: Date.now(), name, score: 0, number: null, wins: 0 };
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,15 +18,9 @@ export const NewPlayerForm = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!input.name) {
-      return;
-    }
+    if (!input.name) return;
 
-    const newPlayer = createNewPlayer(input.name);
-    setPlayers(prev => {
-      setLocalStorage([...prev, newPlayer]);
-      return [...prev, newPlayer];
-    });
+    addNewPlayer(input.name);
     setInput({ name: '' });
   };
 
@@ -53,7 +30,7 @@ export const NewPlayerForm = ({
       onSubmit={handleSubmit}
     >
       <Input
-        className="border-[#a1e3ff] border rounded-r-none border-r-none text-[#a1e3ff] placeholder-[#a1e3ff] shadow-none"
+        className="border-[#a1e3ff] border rounded-r-none border-r-none text-[#a1e3ff] placeholder-[#a1e3ff] shadow-none placeholder:text-neutral-400"
         name="name"
         type="text"
         value={input.name}

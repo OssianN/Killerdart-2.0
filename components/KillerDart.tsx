@@ -1,15 +1,10 @@
 'use client';
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import React, { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { GameSettings } from './GameSettings';
 import PlayersList from '../components/PlayersList';
 import type { PlayerData } from './VideoStream';
 import { NewPlayerForm } from './Form';
+import { usePlayers } from '@/hooks/usePlayers';
 
 export type Player = {
   id: number;
@@ -17,14 +12,6 @@ export type Player = {
   score: number;
   number: number | null;
   wins: number;
-  active?: boolean;
-  isDead?: boolean;
-};
-
-export type UpdatePlayerProps = {
-  score?: number;
-  number?: number | null;
-  wins?: number;
   active?: boolean;
   isDead?: boolean;
 };
@@ -38,35 +25,7 @@ export const KillerDart = ({
   confirmedData,
   setConfirmedData,
 }: KillerDartProps) => {
-  const [players, setPlayers] = useState<Player[]>([]);
-
-  // fix  <0 & >5
-  const updatePlayer = useCallback(
-    (id: number, updatePlayer: UpdatePlayerProps) => {
-      const newList: Player[] = players.map(player => {
-        handlePlayerActive(player);
-        return player.id === id
-          ? {
-              ...player,
-              ...updatePlayer,
-              isDead: updatePlayer.score === 0,
-            }
-          : player;
-      });
-
-      setPlayers(newList);
-      setLocalStorage(newList);
-    },
-    [players]
-  );
-
-  const handleClearStats = () => {
-    const winnerId = isWinner(players);
-    const newList = resetPlayerStats(players, winnerId);
-
-    setLocalStorage(newList);
-    setPlayers(newList);
-  };
+  const { players, updatePlayer } = usePlayers();
 
   //   const handleRemoveAll = () => {
   //     setLocalStorage([]);
@@ -85,51 +44,11 @@ export const KillerDart = ({
     });
   }, [confirmedData, players, setConfirmedData, updatePlayer]);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const storage = localStorage.getItem('players');
-    const localList = storage ? JSON.parse(storage) : [];
-    setPlayers(localList);
-  }, []);
-
   return (
     <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
-      <GameSettings handleClearStats={handleClearStats} />
-      <PlayersList
-        players={players}
-        updatePlayer={updatePlayer}
-        setPlayers={setPlayers}
-        setLocalStorage={setLocalStorage}
-      />
-      <NewPlayerForm
-        setPlayers={setPlayers}
-        setLocalStorage={setLocalStorage}
-      />
+      <GameSettings />
+      <PlayersList />
+      <NewPlayerForm />
     </div>
   );
-};
-
-const setLocalStorage = (players: Player[]) => {
-  localStorage.setItem('players', JSON.stringify(players));
-};
-
-const resetPlayerStats = (players: Player[], winnerId?: number) =>
-  players.map(player => ({
-    ...player,
-    score: 0,
-    number: null,
-    active: false,
-    isDead: false,
-    wins: player.id === winnerId ? player.wins + 1 : player.wins,
-  }));
-
-const isWinner = (players: Player[]) => {
-  const winners = players.filter(player => player.score === 5);
-  return winners.length === 1 ? winners[0].id : undefined;
-};
-
-const handlePlayerActive = (player: Player) => {
-  if (player.score > 0) {
-    player.active = true;
-  }
 };

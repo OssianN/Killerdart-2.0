@@ -18,7 +18,6 @@ export const useDebouncedState = <T>({
 
     timerRef.current = setTimeout(() => {
       setConfirmedData(data);
-      console.log(data);
     }, delay);
 
     return () => {

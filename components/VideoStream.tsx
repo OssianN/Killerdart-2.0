@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { Button } from './ui/button';
+import Image from 'next/image';
 
 export type PlayerData = {
   player: number;
@@ -67,8 +68,28 @@ export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
       )}
 
       <div className="flex gap-6">
-        <p>Player: {data?.player}</p>
-        <p>Points: {data?.points}</p>
+        <p className="flex gap-2 items-center">
+          <Image
+            src={`/${
+              data?.player ? dataToFingersMap[data.player] : 'zero-fingers.png'
+            }`}
+            alt="one finger"
+            width={40}
+            height={40}
+          />
+          Player: {data?.player}
+        </p>
+        <p className="flex gap-2 items-center">
+          Points: {data?.points}
+          <Image
+            src={`/${
+              data?.points ? dataToFingersMap[data.points] : 'zero-fingers.png'
+            }`}
+            alt="one finger"
+            width={40}
+            height={40}
+          />
+        </p>
       </div>
 
       <video
@@ -80,4 +101,12 @@ export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
       />
     </div>
   );
+};
+
+const dataToFingersMap: Record<number, string> = {
+  1: 'one-finger.png',
+  2: 'two-fingers.png',
+  3: 'three-fingers.png',
+  4: 'four-fingers.png',
+  5: 'five-fingers.png',
 };

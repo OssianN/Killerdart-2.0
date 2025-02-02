@@ -1,13 +1,16 @@
-import type { Player, UpdatePlayerProps } from './KillerDart';
-import { motion, useAnimate } from 'framer-motion';
+import { Minus, Plus } from 'iconoir-react';
+import type { Player } from './KillerDart';
+import { useAnimate } from 'framer-motion';
+import { Button } from './ui/button';
+import { usePlayers } from '@/hooks/usePlayers';
 
 type ScoreButtonProps = {
   player: Player;
   operator: 'plus' | 'minus';
-  updatePlayer: (id: number, updatedPlayer: UpdatePlayerProps) => void;
 };
 
-const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
+const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
+  const { updatePlayer } = usePlayers();
   const [scope, animate] = useAnimate();
   const changeScore = (newValue: number) =>
     newValue > 5 ? 5 : newValue < 0 ? 0 : newValue;
@@ -23,25 +26,23 @@ const ScoreButton = ({ player, operator, updatePlayer }: ScoreButtonProps) => {
     });
 
     animate(scope.current, {
-      scale: [1, 0.5, 1],
-      rotate: operator === 'minus' ? [1, -90, 1] : [1, 90, 1],
+      rotate: operator === 'plus' ? [1, 180] : [1, -180],
       transition: {
-        duration: 200,
+        type: 'spring',
+        stiffness: 500,
+        damping: 50,
       },
     });
   };
 
   return (
-    <motion.button
-      ref={scope}
-      className="h-full w-full text-white text-4xl flex justify-center touch-manipulation"
+    <Button
+      variant="outline"
+      className="h-full w-full bg-white flex items-center justify-center [&_svg]:size-6"
       onClick={handleScoreChange}
     >
-      <span className="h-[2px] w-4 bg-white inline-block absolute self-center"></span>
-      {operator === 'plus' && (
-        <span className="h-[2px] w-4 bg-white inline-block absolute self-center rotate-90"></span>
-      )}
-    </motion.button>
+      <div ref={scope}>{operator === 'plus' ? <Plus /> : <Minus />}</div>
+    </Button>
   );
 };
 

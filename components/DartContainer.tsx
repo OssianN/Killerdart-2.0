@@ -1,22 +1,27 @@
+import { motion } from 'framer-motion';
 import DartSvg from './DartSvg';
 type DartContainerProps = {
   playerScore: number;
 };
 
 const DartContainer = ({ playerScore }: DartContainerProps) => {
+  const initial = { translateY: -7, translateX: 7, opacity: 0.2 };
   return (
     <div className="flex">
       {new Array(5).fill(0).map((_, i) => {
         return (
-          <div className="relative w-6 h-6" key={i}>
-            <DartSvg
-              className={`w-full h-full transition duration-300 ${
-                playerScore <= i
-                  ? 'opacity-20 -translate-y-3 translate-x-2'
-                  : 'opacity-100 -translate-y-0 -translate-x-1'
-              }`}
-            />
-          </div>
+          <motion.div
+            className="relative w-6 h-6"
+            key={i}
+            initial={initial}
+            animate={
+              playerScore > i
+                ? { translateY: 0, translateX: 0, opacity: 1 }
+                : initial
+            }
+          >
+            <DartSvg className="w-full h-full" />
+          </motion.div>
         );
       })}
     </div>
