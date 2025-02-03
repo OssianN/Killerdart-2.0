@@ -1,12 +1,11 @@
 import { useRef } from 'react';
 import { PlayerItem } from './Player';
 import { AnimatePresence } from 'framer-motion';
-import { usePlayers } from '@/hooks/usePlayers';
+import { usePlayers } from '@/contexts/PlayersContext';
 
 const PlayersList = () => {
   const listRef = useRef<HTMLUListElement>(null);
   const { players } = usePlayers();
-  console.log(players, 'list');
 
   if (!players.length) return null;
 

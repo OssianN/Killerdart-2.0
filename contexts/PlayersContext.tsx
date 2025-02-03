@@ -1,5 +1,11 @@
 import type { Player } from '@/components/KillerDart';
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  ReactNode,
+} from 'react';
 
 export type UpdatedPlayerProps = {
   score?: number;
@@ -8,8 +14,17 @@ export type UpdatedPlayerProps = {
   active?: boolean;
   isDead?: boolean;
 };
+
+const PlayersContext = createContext<PlayersContextProps>({
+  players: [],
+  addNewPlayer: () => {},
+  updatePlayer: () => {},
+  handleClearStats: () => {},
+  handleRemovePlayer: () => {},
+});
+
 // fix  <0 & >5
-export const usePlayers = () => {
+export const PlayersProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<Player[]>([]);
 
   const addNewPlayer = (name: string) => {
@@ -23,12 +38,15 @@ export const usePlayers = () => {
   const updatePlayer = (id: number, updatedPlayer: UpdatedPlayerProps) => {
     const newList: Player[] = players
       .map(player => {
-        handlePlayerActive(player);
         return player.id === id
           ? {
               ...player,
               ...updatedPlayer,
-              isDead: updatedPlayer.score === 0,
+              ...(updatedPlayer.score !== undefined && {
+                isDead: updatedPlayer.score < 1,
+                score: changeScore(updatedPlayer.score),
+                active: true,
+              }),
             }
           : player;
       })
@@ -62,13 +80,27 @@ export const usePlayers = () => {
     setPlayers(localList);
   }, []);
 
-  return {
-    players,
-    addNewPlayer,
-    updatePlayer,
-    handleClearStats,
-    handleRemovePlayer,
-  };
+  return (
+    <PlayersContext.Provider
+      value={{
+        players,
+        addNewPlayer,
+        updatePlayer,
+        handleClearStats,
+        handleRemovePlayer,
+      }}
+    >
+      {children}
+    </PlayersContext.Provider>
+  );
+};
+
+export const usePlayers = () => {
+  const context = useContext(PlayersContext);
+  if (!context) {
+    throw new Error('usePlayers must be used within a PlayersProvider');
+  }
+  return context;
 };
 
 const resetPlayerStats = (players: Player[], winnerId?: number) =>
@@ -86,12 +118,17 @@ const isWinner = (players: Player[]) => {
   return winners.length === 1 ? winners[0].id : undefined;
 };
 
-const handlePlayerActive = (player: Player) => {
-  if (player.score > 0) {
-    player.active = true;
-  }
-};
-
 const setLocalStorage = (players: Player[]) => {
   localStorage.setItem('players', JSON.stringify(players));
+};
+
+const changeScore = (newValue: number) =>
+  newValue > 5 ? 5 : newValue < 0 ? 0 : newValue;
+
+type PlayersContextProps = {
+  players: Player[];
+  addNewPlayer: (name: string) => void;
+  updatePlayer: (id: number, updatedPlayer: UpdatedPlayerProps) => void;
+  handleClearStats: () => void;
+  handleRemovePlayer: (playerId: number) => void;
 };

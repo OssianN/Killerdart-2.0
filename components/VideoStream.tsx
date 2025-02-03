@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { Button } from './ui/button';
 import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export type PlayerData = {
   player: number;
@@ -18,15 +19,15 @@ export type PlayerData = {
 };
 
 type VideoStreamProps = {
-  setConfirmedData: Dispatch<SetStateAction<PlayerData | null>>;
+  setUseCamera: Dispatch<SetStateAction<boolean>>;
 };
 
-export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
+export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [data, setData] = useState<PlayerData | null>(null);
-  const { socket, isConnected } = useSocket({ onMessage: setData });
   const [stream, setStream] = useState<MediaStream | null>(null);
-  useDebouncedState<PlayerData | null>({ data, setConfirmedData, delay: 1000 });
+  const { socket, isConnected } = useSocket({ onMessage: setData });
+  useDebouncedState({ data, delay: 1000 });
   useSendVideoData({ videoRef, stream, isConnected, socket });
 
   useEffect(() => {
@@ -36,6 +37,10 @@ export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
       }
     };
   }, [stream]);
+
+  useEffect(() => {
+    startCamera();
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -53,44 +58,51 @@ export const VideoStream = ({ setConfirmedData }: VideoStreamProps) => {
     if (!stream) return;
     stream.getTracks().forEach(track => track.stop());
     setStream(null);
+    setUseCamera(false);
   };
 
   return (
     <div className="w-full flex flex-col gap-8 items-center justify-center">
-      {stream ? (
+      {stream && (
         <Button className="button" onClick={stopCamera} disabled={!stream}>
           Stop Camera
         </Button>
-      ) : (
-        <Button className="w-32" onClick={startCamera}>
-          Start Camera
-        </Button>
       )}
 
-      <div className="flex gap-6">
-        <p className="flex gap-2 items-center">
-          <Image
-            src={`/${
-              data?.player ? dataToFingersMap[data.player] : 'zero-fingers.png'
-            }`}
-            alt="one finger"
-            width={40}
-            height={40}
-          />
-          Player: {data?.player}
-        </p>
-        <p className="flex gap-2 items-center">
-          Points: {data?.points}
-          <Image
-            src={`/${
-              data?.points ? dataToFingersMap[data.points] : 'zero-fingers.png'
-            }`}
-            alt="one finger"
-            width={40}
-            height={40}
-          />
-        </p>
-      </div>
+      <AnimatePresence>
+        <div className="flex gap-6">
+          <p className="flex gap-2 items-center">
+            <motion.img
+              layout
+              initial={{ scale: 1 }}
+              animate={{ scale: [1, 0.8, 1] }}
+              transition={{ duration: 1 }}
+              src={`/${
+                data?.player
+                  ? dataToFingersMap[data.player]
+                  : 'zero-fingers.png'
+              }`}
+              alt="one finger"
+              width={40}
+              height={40}
+            />
+            Player: {data?.player}
+          </p>
+          <p className="flex gap-2 items-center">
+            Points: {data?.points}
+            <Image
+              src={`/${
+                data?.points
+                  ? dataToFingersMap[data.points]
+                  : 'zero-fingers.png'
+              }`}
+              alt="one finger"
+              width={40}
+              height={40}
+            />
+          </p>
+        </div>
+      </AnimatePresence>
 
       <video
         ref={videoRef}

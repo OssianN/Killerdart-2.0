@@ -5,8 +5,8 @@ import { motion, motionValue, useAnimate, usePresence } from 'framer-motion';
 import { Input } from './ui/input';
 import { ArcheryMatch, Crown } from 'iconoir-react';
 import { Button } from './ui/button';
+import { usePlayers } from '@/contexts/PlayersContext';
 import type { Player } from './KillerDart';
-import { usePlayers } from '@/hooks/usePlayers';
 
 type PlayerProps = {
   player: Player;

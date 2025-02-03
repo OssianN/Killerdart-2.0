@@ -2,7 +2,7 @@ import { Minus, Plus } from 'iconoir-react';
 import type { Player } from './KillerDart';
 import { useAnimate } from 'framer-motion';
 import { Button } from './ui/button';
-import { usePlayers } from '@/hooks/usePlayers';
+import { usePlayers } from '@/contexts/PlayersContext';
 
 type ScoreButtonProps = {
   player: Player;
@@ -12,17 +12,10 @@ type ScoreButtonProps = {
 const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
   const { updatePlayer } = usePlayers();
   const [scope, animate] = useAnimate();
-  const changeScore = (newValue: number) =>
-    newValue > 5 ? 5 : newValue < 0 ? 0 : newValue;
 
   const handleScoreChange = () => {
-    const score =
-      operator === 'plus'
-        ? changeScore(player.score + 1)
-        : changeScore(player.score - 1);
-
     updatePlayer(player.id, {
-      score,
+      score: operator === 'plus' ? player.score + 1 : player.score - 1,
     });
 
     animate(scope.current, {
@@ -37,11 +30,16 @@ const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
 
   return (
     <Button
-      variant="outline"
       className="h-full w-full bg-white flex items-center justify-center [&_svg]:size-6"
       onClick={handleScoreChange}
     >
-      <div ref={scope}>{operator === 'plus' ? <Plus /> : <Minus />}</div>
+      <div ref={scope}>
+        {operator === 'plus' ? (
+          <Plus className="text-[#a1e3ff]" />
+        ) : (
+          <Minus className="text-[#a1e3ff]" />
+        )}
+      </div>
     </Button>
   );
 };

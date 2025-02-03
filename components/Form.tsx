@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { usePlayers } from '@/hooks/usePlayers';
+import { usePlayers } from '@/contexts/PlayersContext';
 
 export const NewPlayerForm = () => {
   const { addNewPlayer } = usePlayers();

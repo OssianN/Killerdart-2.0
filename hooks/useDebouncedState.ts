@@ -1,27 +1,35 @@
-import { type Dispatch, type SetStateAction, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePlayers } from '../contexts/PlayersContext';
+import type { PlayerData } from '@/components/VideoStream';
 
-type UseDebouncedStateProps<T> = {
-  data: T;
-  setConfirmedData: Dispatch<SetStateAction<T>>;
+type UseDebouncedStateProps = {
+  data: PlayerData | null;
   delay: number;
 };
 
-export const useDebouncedState = <T>({
+export const useDebouncedState = ({
   data,
-  setConfirmedData,
   delay = 1500,
-}: UseDebouncedStateProps<T>) => {
+}: UseDebouncedStateProps) => {
+  const { players, updatePlayer } = usePlayers();
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
 
     timerRef.current = setTimeout(() => {
-      setConfirmedData(data);
+      players.map((player, i) => {
+        if (i + 1 === data?.player) {
+          updatePlayer(player.id, {
+            score: data?.points + player.score,
+          });
+        }
+      });
     }, delay);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [data, delay, setConfirmedData]);
+  }, [data, delay, players, updatePlayer]);
 };

@@ -1,11 +1,13 @@
-import { usePlayers } from '@/hooks/usePlayers';
+import { usePlayers } from '@/contexts/PlayersContext';
 import { Button } from './ui/button';
+import { Restart } from 'iconoir-react';
 
 export const GameSettings = () => {
   const { handleClearStats } = usePlayers();
   return (
     <section className="flex w-full mb-4 gap-2">
-      <Button className="" variant={'outline'} onClick={handleClearStats}>
+      <Button variant="outline" onClick={handleClearStats}>
+        <Restart />
         New round
       </Button>
     </section>
