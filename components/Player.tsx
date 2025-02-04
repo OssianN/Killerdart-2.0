@@ -3,7 +3,15 @@ import DartContainer from './DartContainer';
 import ScoreButton from './ScoreButton';
 import { motion, motionValue, useAnimate, usePresence } from 'framer-motion';
 import { Input } from './ui/input';
-import { ArcheryMatch, Crown } from 'iconoir-react';
+import {
+  Archery,
+  ArcheryMatch,
+  Crown,
+  Medal,
+  PrecisionTool,
+  ProfileCircle,
+  SelectiveTool,
+} from 'iconoir-react';
 import { Button } from './ui/button';
 import { usePlayers } from '@/contexts/PlayersContext';
 import type { Player } from './KillerDart';
@@ -59,13 +67,20 @@ export const PlayerItem = ({ player }: PlayerProps) => {
     <motion.li {...animations}>
       <motion.div
         ref={scope}
-        className={`relative flex flex-col items-center w-full px-6 bg-[#a1e3ff] text-white mx-auto max-w-[400px] shadow-md rounded-md transition-all duration-300 ${
-          player.isDead
-            ? 'brightness-75'
-            : player.score === 5
-            ? 'bg-[#ff4242]'
-            : ''
-        }`}
+        className={`relative flex flex-col items-center
+          w-full px-6 mx-auto max-w-[400px] bg-[#a1e3ff] text-white border-white border border-solid
+          shadow-md rounded-md transition-all duration-300 backdrop-filter-blur
+          ${
+            player.isDead
+              ? 'brightness-75'
+              : player.score === 5
+              ? 'bg-[#ff4242]'
+              : ''
+          }`}
+        // style={{
+        //   backgroundImage:
+        //     'linear-gradient(185deg, rgba(161, 227, 255, 0.95) 32%, rgba(226, 246, 255, 0.5))',
+        // }}
       >
         <header
           className="flex justify-between items-center w-full py-3 border-b border-[#ffffff99] border-solid"
@@ -73,10 +88,10 @@ export const PlayerItem = ({ player }: PlayerProps) => {
             opacity: player.isDead ? 0.3 : 1,
           }}
         >
-          <h3 className="text-lg flex-1 font-medium">{player.name}</h3>
+          <h3 className="text-xl flex-1 font-medium">{player.name}</h3>
           <p className="flex flex-g items-center justify-center h-full gap-2">
-            <Crown />
-            <span className="text-lg font-medium">{player.wins}</span>
+            <Crown fontSize={16} />
+            <span className="text-lg">{player.wins}</span>
           </p>
           <div className="relative flex flex-1 items-center justify-end gap-2">
             <Input
@@ -87,7 +102,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
               onChange={handlePlayerNumber}
               value={player.number ? String(player.number) : ''}
             />
-            <ArcheryMatch className="text-sm" />
+            <SelectiveTool fontSize={14} />
           </div>
         </header>
 

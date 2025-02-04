@@ -74,9 +74,9 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
           <p className="flex gap-2 items-center">
             <motion.img
               layout
-              initial={{ scale: 1 }}
-              animate={{ scale: [1, 0.8, 1] }}
-              transition={{ duration: 1 }}
+              // initial={{ scale: 1 }}
+              // animate={{ scale: [1, 0.8, 1] }}
+              // transition={{ duration: 1 }}
               src={`/${
                 data?.player
                   ? dataToFingersMap[data.player]
@@ -107,7 +107,7 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
       <video
         ref={videoRef}
         autoPlay
-        className={`-scale-x-100 w-full h-full rounded-xl hidden ${
+        className={`-scale-x-100 w-full h-full rounded-xl ${
           !stream ? 'hidden' : ''
         }`}
       />

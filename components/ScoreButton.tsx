@@ -35,9 +35,17 @@ const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
     >
       <div ref={scope}>
         {operator === 'plus' ? (
-          <Plus className="text-[#a1e3ff]" />
+          <Plus
+            className={`${
+              player.score === 5 ? 'text-[#ff4242]' : 'text-[#a1e3ff]'
+            }`}
+          />
         ) : (
-          <Minus className="text-[#a1e3ff]" />
+          <Minus
+            className={`${
+              player.score === 5 ? 'text-[#ff4242]' : 'text-[#a1e3ff]'
+            }`}
+          />
         )}
       </div>
     </Button>

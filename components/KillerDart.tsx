@@ -1,7 +1,8 @@
 'use client';
-import { GameSettings } from './GameSettings';
 import PlayersList from '../components/PlayersList';
 import { NewPlayerForm } from './Form';
+import { PlayersProvider } from '@/contexts/PlayersContext';
+import { Header } from './Header';
 
 export type Player = {
   id: number;
@@ -15,10 +16,12 @@ export type Player = {
 
 export const KillerDart = () => {
   return (
-    <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
-      <GameSettings />
-      <PlayersList />
-      <NewPlayerForm />
-    </div>
+    <PlayersProvider>
+      <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
+        <Header />
+        <PlayersList />
+        <NewPlayerForm />
+      </div>
+    </PlayersProvider>
   );
 };

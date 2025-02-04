@@ -5,6 +5,7 @@ import {
   createContext,
   useContext,
   ReactNode,
+  useCallback,
 } from 'react';
 
 export type UpdatedPlayerProps = {
@@ -27,50 +28,53 @@ const PlayersContext = createContext<PlayersContextProps>({
 export const PlayersProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const addNewPlayer = (name: string) => {
+  const addNewPlayer = useCallback((name: string) => {
     const newPlayer = { id: Date.now(), name, score: 0, number: null, wins: 0 };
     setPlayers(prev => {
       setLocalStorage([...prev, newPlayer]);
       return [...prev, newPlayer];
     });
-  };
+  }, []);
 
-  const updatePlayer = (id: number, updatedPlayer: UpdatedPlayerProps) => {
-    const newList: Player[] = players
-      .map(player => {
-        return player.id === id
-          ? {
-              ...player,
-              ...updatedPlayer,
-              ...(updatedPlayer.score !== undefined && {
-                isDead: updatedPlayer.score < 1,
-                score: changeScore(updatedPlayer.score),
-                active: true,
-              }),
-            }
-          : player;
-      })
-      .sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
+  const updatePlayer = useCallback(
+    (id: number, updatedPlayer: UpdatedPlayerProps) => {
+      const newList: Player[] = players
+        .map(player => {
+          return player.id === id
+            ? {
+                ...player,
+                ...updatedPlayer,
+                ...(updatedPlayer.score !== undefined && {
+                  isDead: updatedPlayer.score < 1,
+                  score: changeScore(updatedPlayer.score),
+                  active: true,
+                }),
+              }
+            : player;
+        })
+        .sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
 
-    setPlayers([...newList]);
-    setLocalStorage(newList);
-  };
+      setPlayers([...newList]);
+      setLocalStorage(newList);
+    },
+    [players]
+  );
 
-  const handleRemovePlayer = (playerId: number) => {
+  const handleRemovePlayer = useCallback((playerId: number) => {
     setPlayers(prev => {
       const newList = prev.filter(p => p.id !== playerId);
       setLocalStorage(newList);
       return newList;
     });
-  };
+  }, []);
 
-  const handleClearStats = () => {
+  const handleClearStats = useCallback(() => {
     const winnerId = isWinner(players);
     const newList = resetPlayerStats(players, winnerId);
 
     setLocalStorage(newList);
     setPlayers(newList);
-  };
+  }, [players]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

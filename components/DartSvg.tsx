@@ -3,9 +3,10 @@ import type { CSSProperties } from 'react';
 type DartSvgProps = {
   className?: string;
   style?: CSSProperties;
+  fill?: string;
 };
 
-const DartSvg = ({ className, style }: DartSvgProps) => {
+const DartSvg = ({ className, style, fill }: DartSvgProps) => {
   return (
     <svg
       className={className}
@@ -19,7 +20,7 @@ const DartSvg = ({ className, style }: DartSvgProps) => {
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="#fff"
+        fill={fill ?? '#fff'}
         stroke="none"
       >
         <path

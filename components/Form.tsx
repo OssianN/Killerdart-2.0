@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { usePlayers } from '@/contexts/PlayersContext';
+import { PlusCircle } from 'iconoir-react';
 
 export const NewPlayerForm = () => {
   const { addNewPlayer } = usePlayers();
@@ -38,11 +39,9 @@ export const NewPlayerForm = () => {
         placeholder="Add player..."
         maxLength={12}
       />
-      <Button
-        className="w-16 bg-[#a1e3ff] rounded-l-none shadow-none"
-        type="submit"
-      >
+      <Button className="bg-[#a1e3ff] rounded-l-none shadow-none" type="submit">
         Add
+        <PlusCircle />
       </Button>
     </form>
   );
