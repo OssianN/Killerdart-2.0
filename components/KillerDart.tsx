@@ -1,8 +1,8 @@
 'use client';
-import PlayersList from '../components/PlayersList';
-import { NewPlayerForm } from './Form';
 import { PlayersProvider } from '@/contexts/PlayersContext';
 import { Header } from './Header';
+import PlayersList from './Players/PlayersList';
+import { NewPlayerForm } from './Players/Form';
 
 export type Player = {
   id: number;

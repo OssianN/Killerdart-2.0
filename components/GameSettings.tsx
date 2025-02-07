@@ -11,7 +11,7 @@ import {
   DrawerClose,
 } from './ui/drawer';
 import { Camera, Settings, Xmark } from 'iconoir-react';
-import { VideoStream } from './VideoStream';
+import { VideoStream } from './FingersAI/VideoStream';
 
 export const GameSettings = () => {
   const [useCamera, setUseCamera] = useState(false);
@@ -24,7 +24,7 @@ export const GameSettings = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="flex flex-col mx-auto w-full max-w-sm h-[50dvh] min-h-96">
+        <div className="flex flex-col mx-auto w-full max-w-sm h-[50dvh] min-h-fit overflow-y-auto pb-10">
           <DrawerHeader className="mb-4 border-b border-solid border-neutral-200">
             <DrawerTitle>Fingers AI</DrawerTitle>
             <DrawerDescription>

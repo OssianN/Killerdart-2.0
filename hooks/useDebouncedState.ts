@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { usePlayers } from '../contexts/PlayersContext';
-import type { PlayerData } from '@/components/VideoStream';
+import type { PlayerData } from '@/components/FingersAI/VideoStream';
 
 type UseDebouncedStateProps = {
   data: PlayerData | null;

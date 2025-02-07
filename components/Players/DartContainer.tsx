@@ -4,7 +4,7 @@ type DartContainerProps = {
   playerScore: number;
 };
 
-const DartContainer = ({ playerScore }: DartContainerProps) => {
+export const DartContainer = ({ playerScore }: DartContainerProps) => {
   const initial = { translateY: -7, translateX: 7, opacity: 0.2 };
   return (
     <div className="flex">
@@ -27,5 +27,3 @@ const DartContainer = ({ playerScore }: DartContainerProps) => {
     </div>
   );
 };
-
-export default DartContainer;

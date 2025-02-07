@@ -1,6 +1,6 @@
 'use client';
 import { getServerSideProps } from '@/actions/getServersideProps';
-import type { PlayerData } from '@/components/VideoStream';
+import type { PlayerData } from '@/components/FingersAI/VideoStream';
 import {
   type Dispatch,
   type SetStateAction,
