@@ -11,6 +11,9 @@ import {
 } from 'react';
 import { Button } from '../ui/button';
 import { VideoFeedback } from './VideoFeedback';
+import { Card } from '../ui/card';
+import { Camera, Xmark } from 'iconoir-react';
+import { motion } from 'framer-motion';
 
 export type PlayerData = {
   player: number;
@@ -24,10 +27,23 @@ type VideoStreamProps = {
 export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [data, setData] = useState<PlayerData | null>(null);
+  const [isConfirmingData, setIsConfirmingData] = useState(false);
+
+  const [isShowCamera, setIsShowCamera] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const { socket, isConnected } = useSocket({ onMessage: setData });
-  useDebouncedState({ data, delay: 1000 });
+  const { socket, isConnected } = useSocket({
+    onMessage: setData,
+  });
+  useDebouncedState({ data, setIsConfirmingData });
   useSendVideoData({ videoRef, stream, isConnected, socket });
+
+  const animations = {
+    variants: {
+      initial: { scale: 0, height: '1rem', opacity: 0 },
+      visible: { scale: 1, height: '24rem', opacity: 1 },
+    },
+    transition: { type: 'spring', stiffness: 700, damping: 40 },
+  };
 
   useEffect(() => {
     return () => {
@@ -61,22 +77,44 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 items-center justify-center">
-      {stream && (
-        <Button className="button" onClick={stopCamera} disabled={!stream}>
-          Stop Camera
-        </Button>
-      )}
+    <Card className={`mb-8 w-full relative p-8 ${!stream ? 'invisible' : ''}`}>
+      <motion.div
+        animate={isShowCamera ? 'visible' : 'initial'}
+        {...animations}
+        className="w-full"
+      >
+        <video
+          ref={videoRef}
+          autoPlay
+          className={`-scale-x-100 w-full h-full rounded-xl ${
+            !stream ? 'hidden' : ''
+          }`}
+        />
+      </motion.div>
 
-      <VideoFeedback data={data} />
+      <div className="w-full flex flex-col gap-2 items-center justify-center">
+        <div className="flex jus gap-2">
+          <Button
+            className="absolute top-2 right-2"
+            variant="ghost"
+            onClick={stopCamera}
+            disabled={!stream}
+          >
+            <Xmark />
+          </Button>
 
-      <video
-        ref={videoRef}
-        autoPlay
-        className={`-scale-x-100 w-full h-full rounded-xl ${
-          !stream ? 'hidden' : ''
-        }`}
-      />
-    </div>
+          <Button
+            className="absolute top-2 left-2"
+            onClick={() => setIsShowCamera(prev => !prev)}
+            variant="outline"
+          >
+            <Camera />
+            {isShowCamera ? 'Hide' : 'Show'}
+          </Button>
+        </div>
+
+        <VideoFeedback data={data} isConfirmingData={isConfirmingData} />
+      </div>
+    </Card>
   );
 };

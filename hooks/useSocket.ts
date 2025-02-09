@@ -6,6 +6,7 @@ import {
   type SetStateAction,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -18,6 +19,7 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [token, setToken] = useState<string | undefined>();
   const uri = 'wss://handrecognitionbackend-production.up.railway.app/ws';
   const socket = useMemo(() => new WebSocket(uri), []);
+  const savedData = useRef<PlayerData | null>(null);
 
   useEffect(() => {
     const getToken = async () => {
@@ -39,13 +41,14 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
 
     socket.onmessage = message => {
       const { player, points } = JSON.parse(message.data);
-      onMessage(prev => {
-        if (prev && prev.player === player && prev.points === points) {
-          return prev;
-        }
+      const isSameData =
+        savedData.current?.player == player &&
+        savedData.current?.points == points;
 
-        return { player: Number(player), points: Number(points) };
-      });
+      if (isSameData) return;
+
+      savedData.current = { player, points };
+      onMessage({ player: Number(player), points: Number(points) });
     };
 
     socket.onclose = () => {

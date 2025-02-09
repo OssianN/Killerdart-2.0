@@ -1,10 +1,13 @@
 import { Button } from './ui/button';
-import { Restart } from 'iconoir-react';
-import { GameSettings } from './GameSettings';
+import { Camera, Restart } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
 import { useSearchParams } from 'next/navigation';
 
-export const Header = () => {
+type HeaderProps = {
+  setUseCamera: (value: boolean) => void;
+};
+
+export const Header = ({ setUseCamera }: HeaderProps) => {
   const { handleClearStats } = usePlayers();
   const params = useSearchParams();
 
@@ -15,7 +18,12 @@ export const Header = () => {
         New round
       </Button>
 
-      {params.get('camera') === 'true' && <GameSettings />}
+      {params.get('camera') === 'true' && (
+        <Button onClick={() => setUseCamera(true)}>
+          <Camera />
+          Open camera
+        </Button>
+      )}
     </div>
   );
 };

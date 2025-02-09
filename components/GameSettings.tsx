@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from './ui/button';
 import {
   Drawer,
@@ -10,12 +9,9 @@ import {
   DrawerFooter,
   DrawerClose,
 } from './ui/drawer';
-import { Camera, Settings, Xmark } from 'iconoir-react';
-import { VideoStream } from './FingersAI/VideoStream';
+import { Settings, Xmark } from 'iconoir-react';
 
 export const GameSettings = () => {
-  const [useCamera, setUseCamera] = useState(false);
-
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -32,16 +28,7 @@ export const GameSettings = () => {
               give points. Left hand = player. Right hand = points.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="flex justify-center items-center h-full">
-            {!useCamera ? (
-              <Button className="w-32" onClick={() => setUseCamera(true)}>
-                <Camera />
-                Start Camera
-              </Button>
-            ) : (
-              <VideoStream setUseCamera={setUseCamera} />
-            )}
-          </div>
+
           <DrawerFooter>
             <DrawerClose
               asChild

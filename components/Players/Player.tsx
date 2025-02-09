@@ -8,12 +8,15 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useSwipeable } from 'react-swipeable';
 import type { Player } from '../KillerDart';
+import Image from 'next/image';
+import { dataToFingersMap } from '../FingersAI/VideoFeedback';
 
 type PlayerProps = {
   player: Player;
+  order: number;
 };
 
-export const PlayerItem = ({ player }: PlayerProps) => {
+export const PlayerItem = ({ player, order }: PlayerProps) => {
   const [showDelete, setShowDelete] = useState(false);
   const [isPresent, safeToRemove] = usePresence();
   const { updatePlayer, handleRemovePlayer } = usePlayers();
@@ -53,35 +56,18 @@ export const PlayerItem = ({ player }: PlayerProps) => {
         }}
       >
         <motion.div
-          animate={
-            player.isDead
-              ? 'isDead'
-              : player.score === 5
-              ? 'isKiller'
-              : 'initial'
-          }
-          transition={{
-            stiffness: 100,
-            damping: 5,
-            duration: 0.2,
-          }}
-          variants={{
-            initial: { scale: 1 },
-            isDead: { scale: [0.3, 1] },
-            isKiller: { scale: [2, 1] },
-          }}
           className={`relative flex flex-col items-center
           w-full px-6 mx-auto max-w-[400px] bg-app-blue text-white border-white border border-solid
           shadow-md rounded-md transition-all duration-300 backdrop-filter-blur ${
             showDelete ? 'pointer-events-none' : ''
-          }
-          ${
+          } ${
             player.isDead
               ? 'brightness-75'
               : player.score === 5
               ? 'bg-app-red'
               : ''
           }`}
+          {...playerContentAnimation(player)}
         >
           <header
             className="flex justify-between items-center w-full py-3 border-b border-[#ffffff99] border-solid"
@@ -89,7 +75,16 @@ export const PlayerItem = ({ player }: PlayerProps) => {
               opacity: player.isDead ? 0.3 : 1,
             }}
           >
-            <h3 className="text-xl flex-1 font-medium">{player.name}</h3>
+            <h3 className="flex gap-1 items-center text-xl flex-1 font-medium">
+              <Image
+                src={`/${dataToFingersMap[order + 1]}`}
+                alt="fingers"
+                width={30}
+                height={20}
+                className="invert h-full"
+              />
+              {player.name}
+            </h3>
             <p className="flex flex-g items-center justify-center h-full gap-2">
               <Crown fontSize={16} />
               <span className="text-lg">{player.wins}</span>
@@ -117,16 +112,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
 
       <motion.div
         className="absolute h-full w-32 top-0 right-0 -translate-y-1/2 invisible"
-        animate={showDelete ? 'showDelete' : 'initial'}
-        variants={{
-          initial: { scaleX: 0, originX: 1, visibility: 'hidden' },
-          showDelete: { scaleX: 1, originX: 1, visibility: 'visible' },
-        }}
-        transition={{
-          stiffness: 100,
-          damping: 5,
-          duration: 0.1,
-        }}
+        {...removeAnimation(showDelete)}
       >
         <Button
           className="bg-app-red text-white h-full w-full shadow-md"
@@ -138,3 +124,34 @@ export const PlayerItem = ({ player }: PlayerProps) => {
     </motion.li>
   );
 };
+
+const playerContentAnimation = (player: Player) => ({
+  animate: player.isDead
+    ? 'isDead'
+    : player.score === 5
+    ? 'isKiller'
+    : 'initial',
+  transition: {
+    stiffness: 100,
+    damping: 5,
+    duration: 0.2,
+  },
+  variants: {
+    initial: { scale: 1 },
+    isDead: { scale: [0.3, 1] },
+    isKiller: { scale: [2, 1] },
+  },
+});
+
+const removeAnimation = (showDelete: boolean) => ({
+  animate: showDelete ? 'showDelete' : 'initial',
+  variants: {
+    initial: { scaleX: 0, originX: 1, visibility: 'hidden' as const },
+    showDelete: { scaleX: 1, originX: 1, visibility: 'visible' as const },
+  },
+  transition: {
+    stiffness: 100,
+    damping: 5,
+    duration: 0.1,
+  },
+});

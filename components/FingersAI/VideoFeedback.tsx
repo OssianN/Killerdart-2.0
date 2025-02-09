@@ -1,22 +1,20 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import { Progress } from '../ui/progress';
 
 type VideoFeedbackProps = {
   data: { player: number; points: number } | null;
+  isConfirmingData?: boolean;
 };
 
-export const VideoFeedback = ({ data }: VideoFeedbackProps) => {
-  if (!data) return null;
-
+export const VideoFeedback = ({
+  data,
+  isConfirmingData,
+}: VideoFeedbackProps) => {
   return (
-    <AnimatePresence>
-      <div className="flex gap-6">
-        <p className="flex gap-2 items-center">
-          <motion.img
-            layout
-            // initial={{ scale: 1 }}
-            // animate={{ scale: [1, 0.8, 1] }}
-            // transition={{ duration: 1 }}
+    <div className="flex flex-col items-center gap-4 w-full pt-4">
+      <div className="flex w-full justify-between gap-6">
+        <p className="flex flex-col justify-center gap-2 items-center">
+          <Image
             src={`/${
               data?.player ? dataToFingersMap[data.player] : 'zero-fingers.png'
             }`}
@@ -24,10 +22,9 @@ export const VideoFeedback = ({ data }: VideoFeedbackProps) => {
             width={40}
             height={40}
           />
-          Player: {data?.player}
+          <span className="w-20 text-center">Player: {data?.player}</span>
         </p>
-        <p className="flex gap-2 items-center">
-          Points: {data?.points}
+        <p className="flex flex-col justify-center  gap-2 items-center">
           <Image
             src={`/${
               data?.points ? dataToFingersMap[data.points] : 'zero-fingers.png'
@@ -36,13 +33,16 @@ export const VideoFeedback = ({ data }: VideoFeedbackProps) => {
             width={40}
             height={40}
           />
+          <span className="w-20 text-center"> Points: {data?.points}</span>
         </p>
       </div>
-    </AnimatePresence>
+
+      <Progress value={isConfirmingData ? 100 : 0} />
+    </div>
   );
 };
 
-const dataToFingersMap: Record<number, string> = {
+export const dataToFingersMap: Record<number, string> = {
   1: 'one-finger.png',
   2: 'two-fingers.png',
   3: 'three-fingers.png',

@@ -35,7 +35,7 @@ export const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
           stiffness: 500,
           damping: 50,
         }}
-        whileTap={'isTap'}
+        whileTap="isTap"
       >
         {operator === 'plus' ? <Plus /> : <Minus />}
       </motion.div>
