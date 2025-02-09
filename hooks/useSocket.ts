@@ -1,20 +1,17 @@
 'use client';
 import { getServerSideProps } from '@/actions/getServersideProps';
+import type { PlayerData } from '@/components/FingersAI/VideoStream';
 import {
   type Dispatch,
   type SetStateAction,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
 type UseSocketProps = {
-  onMessage: Dispatch<
-    SetStateAction<{
-      player: string;
-      points: string;
-    } | null>
-  >;
+  onMessage: Dispatch<SetStateAction<PlayerData | null>>;
 };
 
 export const useSocket = ({ onMessage }: UseSocketProps) => {
@@ -22,6 +19,7 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [token, setToken] = useState<string | undefined>();
   const uri = 'wss://handrecognitionbackend-production.up.railway.app/ws';
   const socket = useMemo(() => new WebSocket(uri), []);
+  const savedData = useRef<PlayerData | null>(null);
 
   useEffect(() => {
     const getToken = async () => {
@@ -43,7 +41,14 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
 
     socket.onmessage = message => {
       const { player, points } = JSON.parse(message.data);
-      onMessage({ player, points });
+      const isSameData =
+        savedData.current?.player == player &&
+        savedData.current?.points == points;
+
+      if (isSameData) return;
+
+      savedData.current = { player, points };
+      onMessage({ player: Number(player), points: Number(points) });
     };
 
     socket.onclose = () => {
