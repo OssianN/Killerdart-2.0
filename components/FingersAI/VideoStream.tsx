@@ -14,6 +14,8 @@ import { VideoFeedback } from './VideoFeedback';
 import { Card } from '../ui/card';
 import { Camera, Xmark } from 'iconoir-react';
 import { motion } from 'framer-motion';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
 
 export type PlayerData = {
   player: number;
@@ -40,7 +42,7 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   const animations = {
     variants: {
       initial: { scale: 0, height: '1rem', opacity: 0 },
-      visible: { scale: 1, height: '24rem', opacity: 1 },
+      visible: { scale: 1, height: '100%', opacity: 1 },
     },
     transition: { type: 'spring', stiffness: 700, damping: 40 },
   };
@@ -61,7 +63,7 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
     try {
       if (!videoRef.current) return;
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640 },
+        video: true,
       });
 
       setStream(stream);
@@ -79,7 +81,29 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   };
 
   return (
-    <Card className={`mb-8 w-full relative p-8 ${!stream ? 'invisible' : ''}`}>
+    <Card className={`mb-8 w-full relative p-4 ${!stream ? 'invisible' : ''}`}>
+      <div className="flex justify-between gap-2">
+        <div className="flex items-center space-x-2 m-auto">
+          <Switch
+            id="show-camera"
+            checked={isShowCamera}
+            onCheckedChange={setIsShowCamera}
+          />
+          <Label htmlFor="show-camera">
+            <Camera />
+          </Label>
+        </div>
+
+        <Button
+          className="absolute top-2 right-2"
+          variant="ghost"
+          onClick={stopCamera}
+          disabled={!stream}
+        >
+          <Xmark />
+        </Button>
+      </div>
+
       <motion.div
         animate={isShowCamera ? 'visible' : 'initial'}
         {...animations}
@@ -89,35 +113,13 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
           ref={videoRef}
           autoPlay
           playsInline
-          className={`-scale-x-100 w-full h-full rounded-xl ${
+          className={`-scale-x-100 w-full h-full rounded-xl mt-4 ${
             !stream ? 'hidden' : ''
           }`}
         />
       </motion.div>
 
-      <div className="w-full flex flex-col gap-2 items-center justify-center">
-        <div className="flex jus gap-2">
-          <Button
-            className="absolute top-2 right-2"
-            variant="ghost"
-            onClick={stopCamera}
-            disabled={!stream}
-          >
-            <Xmark />
-          </Button>
-
-          <Button
-            className="absolute top-2 left-2"
-            onClick={() => setIsShowCamera(prev => !prev)}
-            variant="outline"
-          >
-            <Camera />
-            {isShowCamera ? 'Hide' : 'Show'}
-          </Button>
-        </div>
-
-        <VideoFeedback data={data} isConfirmingData={isConfirmingData} />
-      </div>
+      <VideoFeedback data={data} isConfirmingData={isConfirmingData} />
     </Card>
   );
 };

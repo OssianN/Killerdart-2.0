@@ -11,33 +11,32 @@ export const VideoFeedback = ({
   isConfirmingData,
 }: VideoFeedbackProps) => {
   return (
-    <div className="flex flex-col items-center gap-4 w-full pt-4">
-      <div className="flex w-full justify-between gap-6">
-        <p className="flex flex-col justify-center gap-2 items-center">
-          <Image
-            src={`/${
-              data?.player ? dataToFingersMap[data.player] : 'zero-fingers.png'
-            }`}
-            alt="one finger"
-            width={40}
-            height={40}
-          />
-          <span className="w-20 text-center">Player: {data?.player}</span>
-        </p>
-        <p className="flex flex-col justify-center  gap-2 items-center">
-          <Image
-            src={`/${
-              data?.points ? dataToFingersMap[data.points] : 'zero-fingers.png'
-            }`}
-            alt="one finger"
-            width={40}
-            height={40}
-          />
-          <span className="w-20 text-center"> Points: {data?.points}</span>
-        </p>
-      </div>
+    <div className="flex w-full justify-center items-center gap-4 pt-4">
+      <p className="flex flex-col justify-center items-center">
+        <Image
+          src={`/${
+            data?.player ? dataToFingersMap[data.player] : 'zero-fingers.png'
+          }`}
+          alt="one finger"
+          width={40}
+          height={40}
+        />
+        <span className="w-20 text-center">Player: {data?.player}</span>
+      </p>
 
       <Progress value={isConfirmingData ? 100 : 0} />
+
+      <p className="flex flex-col justify-center items-center">
+        <Image
+          src={`/${
+            data?.points ? dataToFingersMap[data.points] : 'zero-fingers.png'
+          }`}
+          alt="one finger"
+          width={40}
+          height={40}
+        />
+        <span className="w-20 text-center"> Points: {data?.points}</span>
+      </p>
     </div>
   );
 };

@@ -12,13 +12,13 @@ export const Header = ({ setUseCamera }: HeaderProps) => {
   return (
     <div className="flex justify-between w-full pb-4">
       <Button onClick={handleClearStats}>
-        <Restart />
         New round
+        <Restart />
       </Button>
 
       <Button onClick={() => setUseCamera(true)} variant="outline">
-        <Camera />
         Open camera
+        <Camera />
       </Button>
     </div>
   );
