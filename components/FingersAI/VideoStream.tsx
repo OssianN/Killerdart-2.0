@@ -60,7 +60,9 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
   const startCamera = async () => {
     try {
       if (!videoRef.current) return;
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640 },
+      });
 
       setStream(stream);
       videoRef.current.srcObject = stream;

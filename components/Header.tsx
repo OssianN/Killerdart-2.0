@@ -16,7 +16,7 @@ export const Header = ({ setUseCamera }: HeaderProps) => {
         New round
       </Button>
 
-      <Button onClick={() => setUseCamera(true)}>
+      <Button onClick={() => setUseCamera(true)} variant="outline">
         <Camera />
         Open camera
       </Button>
