@@ -88,6 +88,7 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
         <video
           ref={videoRef}
           autoPlay
+          playsInline
           className={`-scale-x-100 w-full h-full rounded-xl ${
             !stream ? 'hidden' : ''
           }`}
