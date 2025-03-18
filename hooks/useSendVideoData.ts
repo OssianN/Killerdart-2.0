@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 type UseSendVideoDataProps = {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -13,27 +13,58 @@ export const useSendVideoData = ({
   isConnected,
   socket,
 }: UseSendVideoDataProps) => {
-  useEffect(() => {
-    if (!isConnected || !videoRef?.current || !stream) return;
-    const intervalId = setInterval(() => {
-      try {
-        const canvas = document.createElement('canvas');
-        const video = videoRef.current;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameId = useRef<number | null>(null);
+  const lastFrameTime = useRef(0);
+  const frameInterval = 200;
 
-        canvas.width = video?.videoWidth ?? 0;
-        canvas.height = video?.videoHeight ?? 0;
+  const sendFrame = useCallback(() => {
+    const video = videoRef.current;
+    let canvas = canvasRef.current;
 
-        const ctx = canvas.getContext('2d');
-        if (!ctx || !video) return;
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvasRef.current = canvas;
+    }
 
-        ctx.drawImage(video, 0, 0);
-        const base64Frame = canvas.toDataURL('image/jpeg');
-        socket.send(base64Frame);
-      } catch (error) {
-        console.error('Error sending frame:', error);
+    const ctx = canvas.getContext('2d');
+    if (!ctx || !video) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0);
+    canvas.toBlob(
+      blob => {
+        if (blob && socket.readyState === WebSocket.OPEN) {
+          socket.send(blob);
+        }
+      },
+      'image/jpeg',
+      0.8
+    );
+  }, [socket, videoRef]);
+
+  const scheduleNextFrame = useCallback(() => {
+    animationFrameId.current = requestAnimationFrame(timestamp => {
+      if (timestamp - lastFrameTime.current >= frameInterval) {
+        lastFrameTime.current = timestamp;
+        sendFrame();
       }
-    }, 200);
+      scheduleNextFrame();
+    });
+  }, [sendFrame]);
 
-    return () => clearInterval(intervalId);
-  }, [isConnected, socket, stream, videoRef]);
+  useEffect(() => {
+    if (!videoRef?.current || !stream) return;
+
+    lastFrameTime.current = performance.now();
+    scheduleNextFrame();
+
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+  }, [isConnected, scheduleNextFrame, stream, videoRef]);
 };

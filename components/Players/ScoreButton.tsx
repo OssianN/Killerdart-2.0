@@ -37,7 +37,11 @@ export const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
         }}
         whileTap="isTap"
       >
-        {operator === 'plus' ? <Plus /> : <Minus />}
+        {operator === 'plus' ? (
+          <Plus strokeWidth={2} />
+        ) : (
+          <Minus strokeWidth={2} />
+        )}
       </motion.div>
     </Button>
   );

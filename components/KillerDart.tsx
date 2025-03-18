@@ -22,8 +22,8 @@ export const KillerDart = () => {
   return (
     <PlayersProvider>
       <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
-        {useCamera && <VideoStream setUseCamera={setUseCamera} />}
-        <Header setUseCamera={setUseCamera} />
+        {/* {useCamera && <VideoStream />} */}
+        <Header setUseCamera={setUseCamera} useCamera={useCamera} />
         <PlayersList />
         <NewPlayerForm />
       </div>

@@ -17,7 +17,7 @@ type UseSocketProps = {
 export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [isConnected, setIsConnected] = useState(false);
   const [token, setToken] = useState<string | undefined>();
-  const uri = 'wss://handrecognitionbackend-production.up.railway.app/ws';
+  const uri = 'https://hand-recognition-backend.onrender.com/';
   const socket = useMemo(() => new WebSocket(uri), []);
   const savedData = useRef<PlayerData | null>(null);
 
@@ -35,11 +35,13 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
     if (!token) return;
 
     socket.onopen = () => {
+      console.log('connected');
       socket.send(JSON.stringify({ type: 'auth', token }));
       setIsConnected(true);
     };
 
     socket.onmessage = message => {
+      console.log({ message });
       const { player, points } = JSON.parse(message.data);
       const isSameData =
         savedData.current?.player == player &&

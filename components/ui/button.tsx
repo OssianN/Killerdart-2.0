@@ -5,19 +5,20 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium duration-200 transition-brightness transition-background focus-visible:outline-app-blue disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:h-full [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium duration-200 transition-brightness transition-background betterhover:hover:brightness-110 focus-visible:outline-app-blue disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:h-full [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-app-blue text-white shadow-sm hover:brightness-75',
+        default: 'bg-app-blue text-white shadow-sm',
         destructive:
-          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+          'bg-destructive text-destructive-foreground shadow-sm betterhover:hover:bg-destructive/90',
         outline:
-          'border border-app-blue border-solid bg-transparent shadow-sm text-app-blue hover:brightness-75',
+          'border border-app-blue border-solid bg-transparent shadow-sm text-app-blue',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-secondary text-secondary-foreground shadow-sm betterhover:hover:bg-secondary/80',
+        ghost:
+          'betterhover:hover:bg-accent betterhover:hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 betterhover:hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',

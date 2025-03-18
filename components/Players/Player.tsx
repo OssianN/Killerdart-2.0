@@ -10,6 +10,7 @@ import { useSwipeable } from 'react-swipeable';
 import type { Player } from '../KillerDart';
 import Image from 'next/image';
 import { dataToFingersMap } from '../FingersAI/VideoFeedback';
+import { Separator } from '../ui/separator';
 
 type PlayerProps = {
   player: Player;
@@ -70,12 +71,12 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
           {...playerContentAnimation(player)}
         >
           <header
-            className="flex justify-between items-center w-full py-3 border-b border-[#ffffff99] border-solid"
+            className="flex justify-between items-center w-full h-16 py-3 gap-4"
             style={{
               opacity: player.isDead ? 0.3 : 1,
             }}
           >
-            <h3 className="flex gap-1 items-center text-xl flex-1 font-medium">
+            <h3 className="flex gap-1 items-center w-full text-xl flex-2 font-medium">
               <Image
                 src={`/${dataToFingersMap[order + 1]}`}
                 alt="fingers"
@@ -85,22 +86,27 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
               />
               {player.name}
             </h3>
-            <p className="flex flex-g items-center justify-center h-full gap-2">
-              <Crown fontSize={16} />
-              <span className="text-lg">{player.wins}</span>
+
+            <Separator orientation="vertical" />
+
+            <p className="flex flex-g items-center justify-center h-full gap-1">
+              <Crown fontSize={20} />
+              <span className="text-lg font-light">{player.wins}</span>
             </p>
-            <div className="relative flex flex-1 items-center justify-end gap-2">
+            <div className="relative flex flex-1 items-center justify-end gap-1">
+              <SelectiveTool fontSize={14} />
               <Input
-                className="webkit-appearance-none bg-none w-16 text-lg md:text-lg text-right text-white rounded-none shadow-none p-0.5"
+                className="webkit-appearance-none bg-none w-8 text-lg font-light md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-white/50"
                 type="numeric"
-                placeholder="__"
+                placeholder="00"
                 max={2}
                 onChange={handlePlayerNumber}
                 value={player.number ? String(player.number) : ''}
               />
-              <SelectiveTool fontSize={14} />
             </div>
           </header>
+
+          <Separator />
 
           <div className="flex items-center justify-center w-full h-16 gap-6 py-3">
             <ScoreButton player={player} operator={'minus'} />

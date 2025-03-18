@@ -2,19 +2,13 @@
 import { useDebouncedState } from '@/hooks/useDebouncedState';
 import { useSendVideoData } from '@/hooks/useSendVideoData';
 import { useSocket } from '@/hooks/useSocket';
-import {
-  type Dispatch,
-  type SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Button } from '../ui/button';
+import { useEffect, useRef, useState } from 'react';
 import { VideoFeedback } from './VideoFeedback';
 import { Card } from '../ui/card';
-import { Camera, Xmark } from 'iconoir-react';
 import { motion } from 'framer-motion';
-import { Switch } from '../ui/switch';
+import { Switch } from '@radix-ui/react-switch';
+import { ModernTv, NavArrowDown } from 'iconoir-react';
+import { Separator } from '../ui/separator';
 import { Label } from '../ui/label';
 
 export type PlayerData = {
@@ -22,11 +16,7 @@ export type PlayerData = {
   points: number;
 };
 
-type VideoStreamProps = {
-  setUseCamera: Dispatch<SetStateAction<boolean>>;
-};
-
-export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
+export const VideoStream = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [data, setData] = useState<PlayerData | null>(null);
   const [isConfirmingData, setIsConfirmingData] = useState(false);
@@ -73,51 +63,41 @@ export const VideoStream = ({ setUseCamera }: VideoStreamProps) => {
     }
   };
 
-  const stopCamera = () => {
-    if (!stream) return;
-    stream.getTracks().forEach(track => track.stop());
-    setStream(null);
-    setUseCamera(false);
-  };
-
   return (
-    <Card className={`mb-8 w-full relative p-4 ${!stream ? 'invisible' : ''}`}>
-      <div className="flex justify-between gap-2">
-        <div className="flex items-center space-x-2 m-auto">
-          <Switch
-            id="show-camera"
-            checked={isShowCamera}
-            onCheckedChange={setIsShowCamera}
-          />
-          <Label htmlFor="show-camera">
-            <Camera />
-          </Label>
-        </div>
-
-        <Button
-          className="absolute top-2 right-2"
-          variant="ghost"
-          onClick={stopCamera}
-          disabled={!stream}
-        >
-          <Xmark />
-        </Button>
-      </div>
+    <Card
+      className={`flex flex-col mb-8 w-full relative p-4 ${
+        !stream ? 'invisible' : ''
+      }`}
+    >
+      <Switch
+        checked={isShowCamera}
+        onCheckedChange={setIsShowCamera}
+        className="flex items-center gap-2 m-auto"
+      >
+        <NavArrowDown
+          className={`h-4 w-4 duration-200 ${isShowCamera ? 'rotate-180' : ''}`}
+        />
+        <Label className="cursor-pointer">
+          <ModernTv />
+        </Label>
+      </Switch>
 
       <motion.div
         animate={isShowCamera ? 'visible' : 'initial'}
         {...animations}
-        className="w-full"
+        className="w-full rounded-xl mt-4 overflow-hidden"
       >
         <video
           ref={videoRef}
+          width={640}
+          height={480}
           autoPlay
           playsInline
-          className={`-scale-x-100 w-full h-full rounded-xl mt-4 ${
-            !stream ? 'hidden' : ''
-          }`}
+          className={`-scale-x-100 w-full h-full ${!stream ? 'hidden' : ''}`}
         />
       </motion.div>
+
+      {isShowCamera && <Separator className="my-2" />}
 
       <VideoFeedback data={data} isConfirmingData={isConfirmingData} />
     </Card>

@@ -11,7 +11,7 @@ export const VideoFeedback = ({
   isConfirmingData,
 }: VideoFeedbackProps) => {
   return (
-    <div className="flex w-full justify-center items-center gap-4 pt-4">
+    <div className="flex w-full justify-center items-center">
       <p className="flex flex-col justify-center items-center">
         <Image
           src={`/${
@@ -21,7 +21,7 @@ export const VideoFeedback = ({
           width={40}
           height={40}
         />
-        <span className="w-20 text-center">Player: {data?.player}</span>
+        <span className="w-20 text-center">Player {data?.player}</span>
       </p>
 
       <Progress value={isConfirmingData ? 100 : 0} />
@@ -35,7 +35,7 @@ export const VideoFeedback = ({
           width={40}
           height={40}
         />
-        <span className="w-20 text-center"> Points: {data?.points}</span>
+        <span className="w-20 text-center"> Points {data?.points}</span>
       </p>
     </div>
   );
