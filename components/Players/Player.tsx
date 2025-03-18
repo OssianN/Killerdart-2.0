@@ -99,6 +99,8 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
                 className="webkit-appearance-none bg-none w-8 text-lg font-light md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-white/50"
                 type="numeric"
                 placeholder="00"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 max={2}
                 onChange={handlePlayerNumber}
                 value={player.number ? String(player.number) : ''}
