@@ -1,17 +1,19 @@
 import { Button } from './ui/button';
-import { Camera, Restart } from 'iconoir-react';
+import { Restart } from 'iconoir-react';
+// import { Camera, Restart } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
-import { Switch } from './ui/switch';
+// import { Switch } from './ui/switch';
 import { motion as m, useAnimation } from 'framer-motion';
-import { Label } from './ui/label';
+// import { Label } from './ui/label';
 import { useState } from 'react';
 
-type HeaderProps = {
-  setUseCamera: (value: boolean) => void;
-  useCamera: boolean;
-};
+// type HeaderProps = {
+//   setUseCamera: (value: boolean) => void;
+//   useCamera: boolean;
+// };
 
-export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
+// export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
+export const Header = () => {
   const controls = useAnimation();
   const { handleClearStats } = usePlayers();
   const [isAnimating, setIsAnimating] = useState(false);
