@@ -3,8 +3,8 @@ import { PlayersProvider } from '@/contexts/PlayersContext';
 import { Header } from './Header';
 import PlayersList from './Players/PlayersList';
 import { NewPlayerForm } from './Players/Form';
-// import { useState } from 'react';
-// import { VideoStream } from './FingersAI/VideoStream';
+import { VideoStream } from './FingersAI/VideoStream';
+import { useState } from 'react';
 
 export type Player = {
   id: number;
@@ -17,14 +17,13 @@ export type Player = {
 };
 
 export const KillerDart = () => {
-  // const [useCamera, setUseCamera] = useState(false);
+  const [useCamera, setUseCamera] = useState(false);
 
   return (
     <PlayersProvider>
       <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
-        {/* {useCamera && <VideoStream />} */}
-        {/* <Header setUseCamera={setUseCamera} useCamera={useCamera} /> */}
-        <Header />
+        {useCamera && <VideoStream />}
+        <Header setUseCamera={setUseCamera} useCamera={useCamera} />
         <PlayersList />
         <NewPlayerForm />
       </div>

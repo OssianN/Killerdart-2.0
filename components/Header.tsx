@@ -1,19 +1,17 @@
 import { Button } from './ui/button';
-import { Restart } from 'iconoir-react';
-// import { Camera, Restart } from 'iconoir-react';
+import { Camera, Restart } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
-// import { Switch } from './ui/switch';
+import { Switch } from './ui/switch';
 import { motion as m, useAnimation } from 'framer-motion';
-// import { Label } from './ui/label';
+import { Label } from './ui/label';
 import { useState } from 'react';
 
-// type HeaderProps = {
-//   setUseCamera: (value: boolean) => void;
-//   useCamera: boolean;
-// };
+type HeaderProps = {
+  setUseCamera: (value: boolean) => void;
+  useCamera: boolean;
+};
 
-// export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
-export const Header = () => {
+export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
   const controls = useAnimation();
   const { handleClearStats } = usePlayers();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -44,7 +42,7 @@ export const Header = () => {
 
   return (
     <div className="flex justify-between w-full py-4">
-      {/* <div className="fixed top-4 left-[50%] -translate-x-[50%] flex items-center space-x-2">
+      <div className="fixed top-4 left-[50%] -translate-x-[50%] flex items-center space-x-2">
         <Switch
           className="relative"
           id="show-camera"
@@ -57,9 +55,13 @@ export const Header = () => {
           }`}
           htmlFor="show-camera"
         >
-          <Camera color="var(--app-blue)" />
+          <Camera
+            color={
+              useCamera ? 'var(--app-blue)' : 'hsl(var(--muted-foreground))'
+            }
+          />
         </Label>
-      </div> */}
+      </div>
 
       <Button onClick={handleNewRound} variant="outline">
         New round

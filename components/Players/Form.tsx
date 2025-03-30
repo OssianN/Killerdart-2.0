@@ -39,7 +39,10 @@ export const NewPlayerForm = () => {
         placeholder="Add player..."
         maxLength={12}
       />
-      <Button className="bg-app-blue rounded-l-none shadow-none" type="submit">
+      <Button
+        className="bg-app-blue h-12 rounded-l-none shadow-none"
+        type="submit"
+      >
         Add
         <PlusCircle />
       </Button>

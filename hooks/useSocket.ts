@@ -1,11 +1,11 @@
 'use client';
-import { getServerSideProps } from '@/actions/getServersideProps';
+// import { getServerSideProps } from '@/actions/getServersideProps';
 import type { PlayerData } from '@/components/FingersAI/VideoStream';
 import {
   type Dispatch,
   type SetStateAction,
+  useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -16,31 +16,57 @@ type UseSocketProps = {
 
 export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [isConnected, setIsConnected] = useState(false);
-  const [token, setToken] = useState<string | undefined>();
-  const uri = 'https://hand-recognition-backend.onrender.com/';
-  const socket = useMemo(() => new WebSocket(uri), []);
+  // const [token, setToken] = useState<string | undefined>();
+  const uri = 'wss://hand-recognition-backend.onrender.com/ws?token=123';
   const savedData = useRef<PlayerData | null>(null);
+  const socket = useRef<WebSocket | null>(null);
 
-  useEffect(() => {
-    const getToken = async () => {
-      const {
-        props: { handRecognitionKey },
-      } = await getServerSideProps();
-      setToken(handRecognitionKey);
-    };
-    getToken();
-  }, []);
+  const connectWs = useCallback(() => {
+    let attempts = 0;
+    socket.current = new WebSocket(uri);
 
-  useEffect(() => {
-    if (!token) return;
+    if (!socket.current) return;
 
-    socket.onopen = () => {
+    socket.current.onopen = () => {
       console.log('connected');
-      socket.send(JSON.stringify({ type: 'auth', token }));
+      // socket.send(JSON.stringify({ type: 'auth', token }));
       setIsConnected(true);
     };
 
-    socket.onmessage = message => {
+    socket.current.onclose = () => {
+      setIsConnected(false);
+    };
+
+    socket.current.onerror = error => {
+      console.error('WebSocket Error ', error);
+
+      if (attempts > 5) {
+        attempts++;
+        console.error('Max attempts reached. Closing socket.');
+        socket.current?.close();
+        return;
+      }
+
+      connectWs();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     const {
+  //       props: { handRecognitionKey },
+  //     } = await getServerSideProps();
+  //     setToken(handRecognitionKey);
+  //   };
+  //   getToken();
+  // }, []);
+
+  useEffect(() => {
+    connectWs();
+
+    if (!socket.current) return;
+
+    socket.current.onmessage = message => {
       console.log({ message });
       const { player, points } = JSON.parse(message.data);
       const isSameData =
@@ -53,16 +79,8 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
       onMessage({ player: Number(player), points: Number(points) });
     };
 
-    socket.onclose = () => {
-      setIsConnected(false);
-    };
+    return () => socket.current?.close();
+  }, [connectWs, onMessage, socket]);
 
-    socket.onerror = error => {
-      console.error('WebSocket Error ', error);
-    };
-
-    return () => socket.close();
-  }, [onMessage, socket, token]);
-
-  return { socket, isConnected };
+  return { socket: socket.current, isConnected };
 };
