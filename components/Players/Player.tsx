@@ -148,24 +148,23 @@ export const PlayerItem = ({ player }: PlayerProps) => {
             }}
           >
             <header
-              className="flex justify-between items-center w-full h-16 py-3 gap-4"
+              className="flex justify-between items-center w-full h-14 py-3 gap-4"
               style={{
                 opacity: player.isDead ? 0.3 : 1,
               }}
             >
-              <div className="relative flex flex-1 items-center justify-end gap-2">
-                <div
-                  className={`relative bg-white rounded-full
-                    w-8 h-8 flex-shrink-0 flex items-center justify-center shadow-md
+              <div
+                className={`relative bg-white rounded-full
+                    w-8 h-8 mx-6 flex-shrink-0 flex items-center justify-center shadow-md
                     ${player.score === 5 ? 'text-app-red' : 'text-app-blue'}
                     ${player.number ? '' : 'opacity-75'} ${playerNumberIcon}`}
-                >
-                  {player.number ?? '?'}
-                </div>
-                <h3 className="flex gap-1 items-center w-full text-xl flex-2 font-medium">
-                  {player.name}
-                </h3>
+              >
+                {player.number ?? '?'}
               </div>
+
+              <h3 className="flex justify-center text-xl font-medium flex-1 border-l border-white/75 border-solid">
+                {player.name}
+              </h3>
 
               <div className="flex flex-g items-center justify-center w-20 border-l border-white/75 border-solid h-full gap-1">
                 <Trophy fontSize={12} strokeWidth={1} />

@@ -42,7 +42,7 @@ export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
   };
 
   return (
-    <div className="flex justify-between w-full pb-8">
+    <div className="flex justify-between w-full pb-4">
       {showCameraControl && (
         <div className="fixed top-4 left-[50%] -translate-x-[50%] flex items-center space-x-2">
           <Switch

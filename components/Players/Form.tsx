@@ -37,7 +37,7 @@ export const NewPlayerForm = () => {
     <Form {...form}>
       <motion.form
         {...animations}
-        className="relative flex items-end w-full rounded-md mt-6 gap-2"
+        className="relative flex items-end w-full rounded-md mt-12 gap-2"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
