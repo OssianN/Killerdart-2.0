@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem } from '../ui/form';
+import { useRef } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(1).max(12),
@@ -16,6 +17,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const NewPlayerForm = () => {
   const { addNewPlayer } = usePlayers();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -27,6 +29,10 @@ export const NewPlayerForm = () => {
   const onSubmit = (data: FormData) => {
     addNewPlayer(data.name);
     form.reset();
+
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
   const animations = {
@@ -51,6 +57,7 @@ export const NewPlayerForm = () => {
                   placeholder="Add player"
                   maxLength={12}
                   {...field}
+                  ref={inputRef}
                 />
               </FormControl>
             </FormItem>

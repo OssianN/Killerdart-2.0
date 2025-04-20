@@ -8,17 +8,15 @@ const PlayersList = () => {
   const listRef = useRef<HTMLUListElement>(null);
   const { players } = usePlayers();
 
-  if (!players.length) return null;
-
   return (
-    <ul className="flex flex-col w-full gap-2" ref={listRef}>
-      <AnimatePresence>
+    <AnimatePresence>
+      <ul className="flex flex-col w-full gap-2" ref={listRef}>
         {players.map((player, i) => (
           <PlayerItem key={player.id} player={player} order={i} />
         ))}
-        <NewPlayerForm />
-      </AnimatePresence>
-    </ul>
+      </ul>
+      <NewPlayerForm key="player-form" />
+    </AnimatePresence>
   );
 };
 

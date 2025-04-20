@@ -2,7 +2,6 @@
 import { PlayersProvider } from '@/contexts/PlayersContext';
 import { Header } from './Header';
 import PlayersList from './Players/PlayersList';
-
 import { VideoStream } from './FingersAI/VideoStream';
 import { Suspense, useState } from 'react';
 
@@ -24,7 +23,7 @@ export const KillerDart = () => {
       <div className="flex flex-col items-center w-full mx-auto max-w-[400px]">
         {useCamera && <VideoStream />}
 
-        <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
           <Header setUseCamera={setUseCamera} useCamera={useCamera} />
         </Suspense>
 

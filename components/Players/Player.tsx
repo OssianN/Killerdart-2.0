@@ -125,7 +125,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
   return (
     <motion.li
       {...animations}
-      className="relative overflow-hidden w- shadow-md rounded-md border-white border border-solid"
+      className="relative overflow-hidden shadow-md rounded-md border-white border border-solid"
     >
       <div className="flex" {...handlers}>
         <motion.div
@@ -148,7 +148,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
             }}
           >
             <header
-              className="flex justify-between items-center w-full h-14 py-3 gap-4"
+              className="flex justify-between items-center w-full h-14 py-3"
               style={{
                 opacity: player.isDead ? 0.3 : 1,
               }}

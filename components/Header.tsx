@@ -5,6 +5,7 @@ import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
 
 type HeaderProps = {
   setUseCamera: (value: boolean) => void;
@@ -12,10 +13,16 @@ type HeaderProps = {
 };
 
 export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
   const { handleClearStats, players } = usePlayers();
   const searchParams = useSearchParams();
   const showCameraControl = searchParams.get('useCamera') === 'true';
   const { toast, dismiss } = useToast();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleConfirmFinishRound = (id: string) => {
     dismiss(id);
@@ -40,6 +47,10 @@ export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
       ),
     });
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className="flex justify-between w-full pb-4">
