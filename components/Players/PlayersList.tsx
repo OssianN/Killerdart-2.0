@@ -12,10 +12,9 @@ const PlayersList = () => {
   return (
     <ul className="flex flex-col w-full gap-2" ref={listRef}>
       <AnimatePresence>
-        {players.length > 0 &&
-          players.map((player, i) => (
-            <PlayerItem key={player.id} player={player} order={i} />
-          ))}
+        {players.map((player, i) => (
+          <PlayerItem key={player.id} player={player} order={i} />
+        ))}
       </AnimatePresence>
     </ul>
   );
