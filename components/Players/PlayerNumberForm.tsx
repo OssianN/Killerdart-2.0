@@ -28,11 +28,15 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
     });
   }
 
+  const preventScrollChange = (e: React.WheelEvent<HTMLInputElement>) => {
+    e.currentTarget.blur();
+  };
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex items-center justify-center h-16 w-full py-3 gap-2"
+        className="flex items-center justify-center h-16 w-full min-w-80 px-20 py-3"
       >
         <FormField
           control={form.control}
@@ -42,13 +46,14 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
               <FormControl>
                 <Input
                   {...field}
-                  className="w-full h-10 text-lg text-white bg-transparent border border-white rounded-md placeholder:text-white/80"
-                  type="text"
-                  placeholder={`Enter ${player.name}'s target`}
+                  className="w-full h-10 text-lg text-app-blue bg-white border-none rounded-l-md rounded-r-none placeholder:text-cyan-300 placeholder:text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  type="number"
+                  placeholder="Enter target"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   maxLength={2}
                   autoComplete="off"
+                  onWheel={preventScrollChange}
                 />
               </FormControl>
             </FormItem>
@@ -57,7 +62,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
         <Button
           type="submit"
           variant="outline"
-          className="w-20 h-10 flex-shrink-0"
+          className="w-12 h-10 flex-shrink-0 rounded-r-md rounded-l-none border-none shadow-none"
         >
           <Check />
         </Button>

@@ -154,10 +154,14 @@ export const PlayerItem = ({ player }: PlayerProps) => {
               }}
             >
               <div
-                className={`relative bg-white rounded-full
-                    w-8 h-8 mx-6 flex-shrink-0 flex items-center justify-center shadow-md
+                className={`relative rounded-full
+                    w-8 h-8 mx-6 flex-shrink-0 flex items-center justify-center
                     ${player.score === 5 ? 'text-app-red' : 'text-app-blue'}
-                    ${player.number ? '' : 'opacity-75'} ${playerNumberIcon}`}
+                    ${
+                      player.number
+                        ? 'bg-white shadow-md'
+                        : 'bg-transparent border border-white border-dashed'
+                    } ${playerNumberIcon}`}
               >
                 {player.number ?? '?'}
               </div>
