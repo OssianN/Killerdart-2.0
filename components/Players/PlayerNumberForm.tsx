@@ -48,6 +48,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
                   inputMode="numeric"
                   pattern="[0-9]*"
                   maxLength={2}
+                  autoComplete="off"
                 />
               </FormControl>
             </FormItem>

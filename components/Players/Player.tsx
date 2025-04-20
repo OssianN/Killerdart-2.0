@@ -8,7 +8,7 @@ import {
   useTransform,
   animate,
 } from 'framer-motion';
-import { Crown } from 'iconoir-react';
+import { Trophy } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
 import { Button } from '../ui/button';
 import { useSwipeable } from 'react-swipeable';
@@ -114,10 +114,18 @@ export const PlayerItem = ({ player }: PlayerProps) => {
     onAnimationComplete: () => !isPresent && safeToRemove(),
   };
 
+  const playerNumberIcon = `before:content-[''] 
+  before:absolute before:top-1/2 before:left-1/2
+  before:-translate-x-1/2 before:-translate-y-1/2
+  before:w-[90%] before:aspect-square before:rounded-full
+  before:border ${
+    player.score === 5 ? 'before:border-app-red' : 'before:border-app-blue'
+  }`;
+
   return (
     <motion.li
       {...animations}
-      className="relative overflow-hidden shadow-md rounded-md border-white border border-solid"
+      className="relative overflow-hidden w- shadow-md rounded-md border-white border border-solid"
     >
       <div className="flex" {...handlers}>
         <motion.div
@@ -127,7 +135,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
         >
           <motion.div
             className={`relative flex flex-col items-center
-            w-full px-6 mx-auto max-w-[400px] bg-app-blue text-white
+            w-full px-3 mx-auto max-w-[400px] bg-app-blue text-white
             transition-all duration-300 backdrop-filter-blur ${
               player.isDead
                 ? 'brightness-75'
@@ -147,9 +155,10 @@ export const PlayerItem = ({ player }: PlayerProps) => {
             >
               <div className="relative flex flex-1 items-center justify-end gap-2">
                 <div
-                  className={`border border-white border-solid rounded-full w-8 h-8 flex-shrink-0 flex items-center justify-center ${
-                    player.number ? '' : 'text-white/80'
-                  }`}
+                  className={`relative bg-white rounded-full
+                    w-8 h-8 flex-shrink-0 flex items-center justify-center shadow-md
+                    ${player.score === 5 ? 'text-app-red' : 'text-app-blue'}
+                    ${player.number ? '' : 'opacity-75'} ${playerNumberIcon}`}
                 >
                   {player.number ?? '?'}
                 </div>
@@ -158,10 +167,10 @@ export const PlayerItem = ({ player }: PlayerProps) => {
                 </h3>
               </div>
 
-              <p className="flex flex-g items-center justify-center h-full gap-1">
-                <Crown fontSize={16} strokeWidth={1} />
+              <div className="flex flex-g items-center justify-center w-20 border-l border-white/75 border-solid h-full gap-1">
+                <Trophy fontSize={12} strokeWidth={1} />
                 <span className="text-lg font-light">{player.wins}</span>
-              </p>
+              </div>
             </header>
 
             {!player.number ? (

@@ -1,11 +1,10 @@
 import { Button } from './ui/button';
-import { Camera, Restart } from 'iconoir-react';
+import { Camera, LeaderboardStar } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
 import { Switch } from './ui/switch';
-import { motion as m, useAnimation } from 'framer-motion';
 import { Label } from './ui/label';
-import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 type HeaderProps = {
   setUseCamera: (value: boolean) => void;
@@ -13,38 +12,37 @@ type HeaderProps = {
 };
 
 export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
-  const controls = useAnimation();
   const { handleClearStats, players } = usePlayers();
-  const [isAnimating, setIsAnimating] = useState(false);
   const searchParams = useSearchParams();
   const showCameraControl = searchParams.get('useCamera') === 'true';
+  const { toast, dismiss } = useToast();
 
-  const handleNewRound = () => {
-    handleRotate();
+  const handleConfirmFinishRound = (id: string) => {
+    dismiss(id);
     handleClearStats();
   };
 
-  const handleRotate = () => {
-    if (!isAnimating) {
-      setIsAnimating(true);
-      controls
-        .start({
-          rotate: 360,
-          transition: {
-            type: 'spring',
-            stiffness: 200,
-            damping: 20,
-          },
-        })
-        .then(() => {
-          controls.set({ rotate: 0 });
-          setIsAnimating(false);
-        });
-    }
+  const handleFinishRound = () => {
+    const { id } = toast({
+      title: 'Start a new round?',
+      description:
+        'This will clear the player stats and give a win to the killer.',
+      variant: 'default',
+      action: (
+        <Button size="sm" onClick={() => handleConfirmFinishRound(id)}>
+          Let&apos;s go!
+        </Button>
+      ),
+      secondaryAction: (
+        <Button size="sm" variant="outline" onClick={() => dismiss(id)}>
+          Cancel
+        </Button>
+      ),
+    });
   };
 
   return (
-    <div className="flex justify-between w-full pb-4">
+    <div className="flex justify-between w-full pb-8">
       {showCameraControl && (
         <div className="fixed top-4 left-[50%] -translate-x-[50%] flex items-center space-x-2">
           <Switch
@@ -69,11 +67,17 @@ export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
       )}
 
       {players.length > 0 && (
-        <Button className="w-full" onClick={handleNewRound} variant="outline">
-          Finish round
-          <m.div animate={controls}>
-            <Restart />
-          </m.div>
+        <Button
+          className="w-full"
+          onClick={handleFinishRound}
+          variant="outline"
+        >
+          <span>Finish round</span>
+          <LeaderboardStar
+            strokeWidth={1}
+            fontSize={18}
+            className="-translate-y-1"
+          />
         </Button>
       )}
     </div>
