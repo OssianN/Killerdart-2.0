@@ -37,7 +37,7 @@ export const NewPlayerForm = () => {
       onSubmit={handleSubmit}
     >
       <Input
-        className="border-app-blue border rounded-r-none border-r-none text-app-blue shadow-none placeholder:text-neutral-400"
+        className="border-app-blue border rounded-r-none border-r-none text-app-blue shadow-none placeholder:text-app-blue"
         name="name"
         type="text"
         value={input.name}

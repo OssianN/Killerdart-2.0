@@ -69,8 +69,8 @@ export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
       )}
 
       {players.length > 0 && (
-        <Button onClick={handleNewRound} variant="outline">
-          New round
+        <Button className="w-full" onClick={handleNewRound} variant="outline">
+          Finish round
           <m.div animate={controls}>
             <Restart />
           </m.div>

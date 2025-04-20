@@ -126,8 +126,8 @@ const setLocalStorage = (players: Player[]) => {
   localStorage.setItem('players', JSON.stringify(players));
 };
 
-const changeScore = (newValue: number) =>
-  newValue > 5 ? 5 : newValue < 0 ? 0 : newValue;
+const changeScore = (newValue: number) => 
+  Math.max(0, Math.min(5, newValue));
 
 type PlayersContextProps = {
   players: Player[];

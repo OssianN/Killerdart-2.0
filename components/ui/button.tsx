@@ -13,7 +13,7 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm betterhover:hover:bg-destructive/90',
         outline:
-          'border border-app-blue border-solid bg-transparent shadow-sm text-app-blue',
+          'border border-app-blue border-solid bg-transparent shadow-md text-app-blue',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm betterhover:hover:bg-secondary/80',
         ghost:
@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 betterhover:hover:underline',
       },
       size: {
-        default: 'h-9 px-4 py-2',
+        default: 'h-12 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',

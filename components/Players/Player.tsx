@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useRef } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { DartContainer } from './DartContainer';
 import { ScoreButton } from './ScoreButton';
 import {
@@ -14,8 +14,6 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useSwipeable } from 'react-swipeable';
 import type { Player } from '../KillerDart';
-import Image from 'next/image';
-import { dataToFingersMap } from '../FingersAI/VideoFeedback';
 import { Separator } from '../ui/separator';
 
 type PlayerProps = {
@@ -26,10 +24,10 @@ type PlayerProps = {
 export const PlayerItem = ({ player, order }: PlayerProps) => {
   const [isPresent, safeToRemove] = usePresence();
   const { updatePlayer, handleRemovePlayer } = usePlayers();
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
   const x = useMotionValue(0);
   const deleteButtonWidth = 128;
-  const isDeleteVisible = useRef(false);
 
   const contentX = useTransform(
     x,
@@ -63,23 +61,23 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
     onSwipedLeft: () => {
       if (x.get() < -deleteButtonWidth / 2) {
         animateX(-deleteButtonWidth);
-        isDeleteVisible.current = true;
+        setIsDeleteVisible(true);
       } else {
         animateX(0);
-        isDeleteVisible.current = false;
+        setIsDeleteVisible(false);
       }
     },
     onSwipedRight: () => {
       animateX(0);
-      isDeleteVisible.current = false;
+      setIsDeleteVisible(false);
     },
     trackMouse: true,
   });
 
   const handleCardClick = () => {
-    if (isDeleteVisible.current) {
+    if (isDeleteVisible) {
       animateX(0);
-      isDeleteVisible.current = false;
+      setIsDeleteVisible(false);
     }
   };
 
@@ -103,10 +101,12 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
       visible: { scale: 1, opacity: 1, transition: { delay: 0.2 } },
       isDead: {
         scale: [1, 0.95, 1],
+        opacity: 1,
         ...statusTransition,
       },
       isKiller: {
         scale: [1, 1.05, 1],
+        opacity: 1,
         ...statusTransition,
       },
       transition: { type: 'spring', stiffness: 700, damping: 40 },
@@ -144,12 +144,9 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
                 : player.score === 5
                 ? 'bg-app-red'
                 : ''
-            }`}
-            style={{
-              pointerEvents: isDeleteVisible.current ? 'none' : 'auto',
-            }}
+            } ${isDeleteVisible ? 'pointer-events-none' : ''}`}
             onUpdate={() => {
-              isDeleteVisible.current = x.get() < -deleteButtonWidth / 2;
+              setIsDeleteVisible(x.get() < -deleteButtonWidth / 2);
             }}
           >
             <header
@@ -158,36 +155,21 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
                 opacity: player.isDead ? 0.3 : 1,
               }}
             >
-              <h3 className="flex gap-1 items-center w-full text-xl flex-2 font-medium">
-                <Image
-                  src={`/${dataToFingersMap[order + 1]}`}
-                  alt="fingers"
-                  width={30}
-                  height={20}
-                  className="invert h-full"
-                />
-                {player.name}
-              </h3>
+              <div className="relative flex flex-1 items-center justify-end gap-2">
+                <div className="border border-white border-solid rounded-full w-8 h-8 flex-shrink-0 flex items-center justify-center">
+                  {player.number ?? '?'}
+                </div>
+                <h3 className="flex gap-1 items-center w-full text-xl flex-2 font-medium">
+                  {player.name}
+                </h3>
+              </div>
 
               <Separator orientation="vertical" />
 
               <p className="flex flex-g items-center justify-center h-full gap-1">
-                <Crown fontSize={20} />
+                <Crown fontSize={16} strokeWidth={1} />
                 <span className="text-lg font-light">{player.wins}</span>
               </p>
-              <div className="relative flex flex-1 items-center justify-end gap-1">
-                <SelectiveTool fontSize={14} />
-                <Input
-                  className="webkit-appearance-none bg-none w-8 text-lg font-light md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-white/50"
-                  type="numeric"
-                  placeholder="00"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  max={2}
-                  onChange={handlePlayerNumber}
-                  value={player.number ? String(player.number) : ''}
-                />
-              </div>
             </header>
 
             <Separator />
@@ -201,7 +183,7 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
         </motion.div>
 
         <motion.div
-          className="absolute inset-y-0 right-0 flex items-center"
+          className="absolute inset-y-0 right-0 flex items-center border-l border-white border-solid"
           style={{
             x: deleteButtonX,
             width: deleteButtonWidth,
@@ -218,3 +200,16 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
     </motion.li>
   );
 };
+
+{
+  /* <Input
+className="webkit-appearance-none bg-none w-8 text-lg font-light md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-white/50"
+type="numeric"
+placeholder="00"
+inputMode="numeric"
+pattern="[0-9]*"
+max={2}
+onChange={handlePlayerNumber}
+value={player.number ? String(player.number) : ''}
+/> */
+}
