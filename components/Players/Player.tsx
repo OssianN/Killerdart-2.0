@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { DartContainer } from './DartContainer';
 import { ScoreButton } from './ScoreButton';
 import {
@@ -8,22 +8,22 @@ import {
   useTransform,
   animate,
 } from 'framer-motion';
-import { Crown, SelectiveTool } from 'iconoir-react';
+import { Crown } from 'iconoir-react';
 import { usePlayers } from '@/contexts/PlayersContext';
-import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useSwipeable } from 'react-swipeable';
-import type { Player } from '../KillerDart';
 import { Separator } from '../ui/separator';
+import { PlayerNumberForm } from './PlayerNumberForm';
+import type { Player } from '../KillerDart';
 
 type PlayerProps = {
   player: Player;
   order: number;
 };
 
-export const PlayerItem = ({ player, order }: PlayerProps) => {
+export const PlayerItem = ({ player }: PlayerProps) => {
   const [isPresent, safeToRemove] = usePresence();
-  const { updatePlayer, handleRemovePlayer } = usePlayers();
+  const { handleRemovePlayer } = usePlayers();
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
   const x = useMotionValue(0);
@@ -114,16 +114,6 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
     onAnimationComplete: () => !isPresent && safeToRemove(),
   };
 
-  const handlePlayerNumber = ({
-    target: { value },
-  }: ChangeEvent<HTMLInputElement>) => {
-    if (!/^\d{0,2}$/gi.test(value)) {
-      return;
-    }
-
-    updatePlayer(player.id, { number: Number(value) });
-  };
-
   return (
     <motion.li
       {...animations}
@@ -156,7 +146,11 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
               }}
             >
               <div className="relative flex flex-1 items-center justify-end gap-2">
-                <div className="border border-white border-solid rounded-full w-8 h-8 flex-shrink-0 flex items-center justify-center">
+                <div
+                  className={`border border-white border-solid rounded-full w-8 h-8 flex-shrink-0 flex items-center justify-center ${
+                    player.number ? '' : 'text-white/80'
+                  }`}
+                >
                   {player.number ?? '?'}
                 </div>
                 <h3 className="flex gap-1 items-center w-full text-xl flex-2 font-medium">
@@ -164,21 +158,24 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
                 </h3>
               </div>
 
-              <Separator orientation="vertical" />
-
               <p className="flex flex-g items-center justify-center h-full gap-1">
                 <Crown fontSize={16} strokeWidth={1} />
                 <span className="text-lg font-light">{player.wins}</span>
               </p>
             </header>
 
-            <Separator />
-
-            <div className="flex items-center justify-center w-full h-16 gap-6 py-3">
-              <ScoreButton player={player} operator={'minus'} />
-              <DartContainer playerScore={player.score} />
-              <ScoreButton player={player} operator={'plus'} />
-            </div>
+            {!player.number ? (
+              <PlayerNumberForm player={player} />
+            ) : (
+              <>
+                <Separator className="opacity-75" />
+                <div className="flex items-center justify-between w-full h-16 gap-6 py-3">
+                  <ScoreButton player={player} operator={'minus'} />
+                  <DartContainer playerScore={player.score} />
+                  <ScoreButton player={player} operator={'plus'} />
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
 
@@ -200,16 +197,3 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
     </motion.li>
   );
 };
-
-{
-  /* <Input
-className="webkit-appearance-none bg-none w-8 text-lg font-light md:text-lg text-right text-white rounded-none shadow-none p-0.5 placeholder:text-white/50"
-type="numeric"
-placeholder="00"
-inputMode="numeric"
-pattern="[0-9]*"
-max={2}
-onChange={handlePlayerNumber}
-value={player.number ? String(player.number) : ''}
-/> */
-}

@@ -20,7 +20,7 @@ export const ScoreButton = ({ player, operator }: ScoreButtonProps) => {
 
   return (
     <Button
-      className="h-full w-full bg-white [&_svg]:size-6 p-0"
+      className="h-full w-20 flex-shrink-0 flex-grow-0 bg-white [&_svg]:size-6 p-0"
       onClick={handleScoreChange}
     >
       <motion.div

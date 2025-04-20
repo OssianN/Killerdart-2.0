@@ -61,6 +61,9 @@ export default {
       screens: {
         betterhover: { raw: '(hover: hover)' },
       },
+      rotate: {
+        'x-180': 'rotateX(180deg)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

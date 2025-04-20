@@ -33,11 +33,11 @@ export const NewPlayerForm = () => {
   return (
     <motion.form
       {...animations}
-      className="relative flex w-full rounded-md mt-6 shadow-md"
+      className="relative flex w-full rounded-md mt-6 gap-2"
       onSubmit={handleSubmit}
     >
       <Input
-        className="border-app-blue border rounded-r-none border-r-none text-app-blue shadow-none placeholder:text-app-blue"
+        className="border-app-blue border text-app-blue shadow-none placeholder:text-app-blue"
         name="name"
         type="text"
         value={input.name}
@@ -45,10 +45,7 @@ export const NewPlayerForm = () => {
         placeholder="Add player..."
         maxLength={12}
       />
-      <Button
-        className="bg-app-blue h-12 rounded-l-none shadow-none"
-        type="submit"
-      >
+      <Button className="bg-app-blue h-12" type="submit">
         Add
         <PlusCircle />
       </Button>

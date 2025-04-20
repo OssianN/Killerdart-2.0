@@ -9,11 +9,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-app-blue text-white shadow-sm',
+        default: 'bg-app-blue text-white shadow-md',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm betterhover:hover:bg-destructive/90',
         outline:
-          'border border-app-blue border-solid bg-transparent shadow-md text-app-blue',
+          'bg-white border border-app-blue border-solid shadow-md text-app-blue',
         secondary:
           'bg-secondary text-secondary-foreground shadow-sm betterhover:hover:bg-secondary/80',
         ghost:
