@@ -3,6 +3,7 @@ import { usePlayers } from '@/contexts/PlayersContext';
 import { PlusCircle } from 'iconoir-react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { motion } from 'framer-motion';
 
 export const NewPlayerForm = () => {
   const { addNewPlayer } = usePlayers();
@@ -25,9 +26,14 @@ export const NewPlayerForm = () => {
     setInput({ name: '' });
   };
 
+  const animations = {
+    layout: true,
+  };
+
   return (
-    <form
-      className="relative flex w-full shadow-sm rounded-md mt-6"
+    <motion.form
+      {...animations}
+      className="relative flex w-full rounded-md mt-6 shadow-md"
       onSubmit={handleSubmit}
     >
       <Input
@@ -46,6 +52,6 @@ export const NewPlayerForm = () => {
         Add
         <PlusCircle />
       </Button>
-    </form>
+    </motion.form>
   );
 };

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { PlayerItem } from './Player';
 import { AnimatePresence } from 'framer-motion';
 import { usePlayers } from '@/contexts/PlayersContext';
+import { NewPlayerForm } from './Form';
 
 const PlayersList = () => {
   const listRef = useRef<HTMLUListElement>(null);
@@ -15,6 +16,7 @@ const PlayersList = () => {
         {players.map((player, i) => (
           <PlayerItem key={player.id} player={player} order={i} />
         ))}
+        <NewPlayerForm />
       </AnimatePresence>
     </ul>
   );

@@ -2,7 +2,7 @@
 import { PlayersProvider } from '@/contexts/PlayersContext';
 import { Header } from './Header';
 import PlayersList from './Players/PlayersList';
-import { NewPlayerForm } from './Players/Form';
+
 import { VideoStream } from './FingersAI/VideoStream';
 import { useState } from 'react';
 
@@ -25,7 +25,6 @@ export const KillerDart = () => {
         {useCamera && <VideoStream />}
         <Header setUseCamera={setUseCamera} useCamera={useCamera} />
         <PlayersList />
-        <NewPlayerForm />
       </div>
     </PlayersProvider>
   );

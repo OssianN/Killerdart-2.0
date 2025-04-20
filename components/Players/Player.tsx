@@ -100,7 +100,7 @@ export const PlayerItem = ({ player, order }: PlayerProps) => {
     exit: { scale: 0.5, opacity: 0 },
     initial: { scale: 0, opacity: 0 },
     variants: {
-      visible: { scale: 1, opacity: 1 },
+      visible: { scale: 1, opacity: 1, transition: { delay: 0.2 } },
       isDead: {
         scale: [1, 0.95, 1],
         ...statusTransition,
