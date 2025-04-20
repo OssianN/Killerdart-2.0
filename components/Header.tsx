@@ -35,13 +35,14 @@ export const Header = ({ setUseCamera, useCamera }: HeaderProps) => {
       description:
         'This will clear the player stats and give a win to the killer.',
       variant: 'default',
+      persistent: true,
       action: (
-        <Button size="sm" onClick={() => handleConfirmFinishRound(id)}>
+        <Button size="lg" onClick={() => handleConfirmFinishRound(id)}>
           Let&apos;s go!
         </Button>
       ),
       secondaryAction: (
-        <Button size="sm" variant="outline" onClick={() => dismiss(id)}>
+        <Button size="lg" variant="outline" onClick={() => dismiss(id)}>
           Cancel
         </Button>
       ),

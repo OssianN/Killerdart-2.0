@@ -132,6 +132,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
           className="flex-shrink-0 w-full"
           style={{ x: contentX }}
           onMouseDown={handleCardClick}
+          onTouchStart={handleCardClick}
         >
           <motion.div
             className={`relative flex flex-col items-center
@@ -163,7 +164,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
                         : 'bg-transparent border border-white border-dashed'
                     } ${playerNumberIcon}`}
               >
-                {player.number ?? '?'}
+                {player.number}
               </div>
 
               <h3 className="flex justify-center text-xl font-medium flex-1 border-l border-white/75 border-solid">

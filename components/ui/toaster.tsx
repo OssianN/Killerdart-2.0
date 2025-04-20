@@ -24,16 +24,20 @@ export function Toaster() {
         ...props
       }) {
         return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            <div className="flex items-center gap-2 pt-2 ml-auto">
-              {secondaryAction}
-              {action}
+          <Toast key={id} {...props} className="pr-4">
+            <div className="flex flex-col items-center gap-2 flex-grow">
+              <div className="grid gap-1 w-full">
+                {title && <ToastTitle>{title}</ToastTitle>}
+                {description && (
+                  <ToastDescription className="text-neutral-500">
+                    {description}
+                  </ToastDescription>
+                )}
+              </div>
+              <div className="flex items-center justify-center gap-2 w-full pt-4">
+                {secondaryAction}
+                {action}
+              </div>
             </div>
             <ToastClose />
           </Toast>
