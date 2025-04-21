@@ -47,7 +47,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
                 <Input
                   {...field}
                   className="w-full h-10 text-lg text-app-blue bg-white border-none rounded-l-md rounded-r-none placeholder:text-cyan-300 placeholder:text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  type="number"
+                  type="tel"
                   placeholder="Enter target"
                   inputMode="numeric"
                   pattern="[0-9]*"
