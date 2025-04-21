@@ -4,7 +4,7 @@ type UseSendVideoDataProps = {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   stream: MediaStream | null;
   isConnected: boolean;
-  socket: WebSocket;
+  socket: WebSocket | null;
 };
 
 export const useSendVideoData = ({
@@ -19,6 +19,8 @@ export const useSendVideoData = ({
   const frameInterval = 200;
 
   const sendFrame = useCallback(() => {
+    if (!socket) return;
+
     const video = videoRef.current;
     let canvas = canvasRef.current;
 
@@ -37,6 +39,7 @@ export const useSendVideoData = ({
     canvas.toBlob(
       blob => {
         if (blob && socket.readyState === WebSocket.OPEN) {
+          console.log(blob);
           socket.send(blob);
         }
       },

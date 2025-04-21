@@ -1,48 +1,73 @@
-import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { usePlayers } from '@/contexts/PlayersContext';
 import { PlusCircle } from 'iconoir-react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { motion } from 'framer-motion';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem } from '../ui/form';
+import { useRef } from 'react';
+
+const formSchema = z.object({
+  name: z.string().min(1).max(12),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export const NewPlayerForm = () => {
   const { addNewPlayer } = usePlayers();
-  const [input, setInput] = useState({
-    name: '',
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+    },
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const onSubmit = (data: FormData) => {
+    addNewPlayer(data.name);
+    form.reset();
 
-    setInput(prev => ({ ...prev, [name]: value }));
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!input.name) return;
-
-    addNewPlayer(input.name);
-    setInput({ name: '' });
+  const animations = {
+    layout: true,
   };
 
   return (
-    <form
-      className="relative flex w-full shadow-sm rounded-md mt-6"
-      onSubmit={handleSubmit}
-    >
-      <Input
-        className="border-app-blue border rounded-r-none border-r-none text-app-blue shadow-none placeholder:text-neutral-400"
-        name="name"
-        type="text"
-        value={input.name}
-        onChange={handleChange}
-        placeholder="Add player..."
-        maxLength={12}
-      />
-      <Button className="bg-app-blue rounded-l-none shadow-none" type="submit">
-        Add
-        <PlusCircle />
-      </Button>
-    </form>
+    <Form {...form}>
+      <motion.form
+        {...animations}
+        className="relative flex items-end w-full rounded-md mt-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input
+                  className="border-app-blue border text-app-blue shadow-none placeholder:text-cyan-300"
+                  placeholder="Add player"
+                  maxLength={12}
+                  {...field}
+                  ref={inputRef}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button className="bg-app-blue h-12" type="submit">
+          Add
+          <PlusCircle />
+        </Button>
+      </motion.form>
+    </Form>
   );
 };
