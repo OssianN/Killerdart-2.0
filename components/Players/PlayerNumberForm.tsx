@@ -25,20 +25,28 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
   });
 
   const onSubmit = (values: FormValues) => {
+    if (!isValidNumber()) return;
+
     updatePlayer(player.id, {
       number: parseInt(values.playerNumber, 10),
     });
   };
 
-  const handleBlur = () => {
-    const isValid = form.formState.isValid;
-    if (isValid) {
-      form.handleSubmit(onSubmit)();
-    }
+  const handleBlur = async () => {
+    if (!isValidNumber()) return;
+
+    form.handleSubmit(onSubmit)();
   };
 
   const preventScrollChange = (e: React.WheelEvent<HTMLInputElement>) => {
     e.currentTarget.blur();
+  };
+
+  const isValidNumber = () => {
+    const currentValue = form.getValues('playerNumber');
+    const validation = formSchema.shape.playerNumber.safeParse(currentValue);
+
+    return validation.success;
   };
 
   return (
