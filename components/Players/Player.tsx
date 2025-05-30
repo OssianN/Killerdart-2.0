@@ -14,6 +14,7 @@ import { Button } from '../ui/button';
 import { useSwipeable } from 'react-swipeable';
 import { Separator } from '../ui/separator';
 import { PlayerNumberForm } from './PlayerNumberForm';
+import { PlayerNumber } from './PlayerNumber';
 import type { Player } from '../KillerDart';
 
 type PlayerProps = {
@@ -114,14 +115,6 @@ export const PlayerItem = ({ player }: PlayerProps) => {
     onAnimationComplete: () => !isPresent && safeToRemove(),
   };
 
-  const playerNumberIcon = `before:content-[''] 
-  before:absolute before:top-1/2 before:left-1/2
-  before:-translate-x-1/2 before:-translate-y-1/2
-  before:w-[90%] before:aspect-square before:rounded-full
-  before:border ${
-    player.score === 5 ? 'before:border-app-red' : 'before:border-app-blue'
-  }`;
-
   return (
     <motion.li
       {...animations}
@@ -154,18 +147,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
                 opacity: player.isDead ? 0.3 : 1,
               }}
             >
-              <div
-                className={`relative rounded-full
-                    w-8 h-8 mx-6 flex-shrink-0 flex items-center justify-center
-                    ${player.score === 5 ? 'text-app-red' : 'text-app-blue'}
-                    ${
-                      player.number
-                        ? 'bg-white shadow-md'
-                        : 'bg-transparent border border-white border-dashed'
-                    } ${playerNumberIcon}`}
-              >
-                {player.number}
-              </div>
+              <PlayerNumber player={player} />
 
               <h3 className="flex justify-center text-xl font-medium flex-1 border-l border-white/75 border-solid">
                 {player.name}
