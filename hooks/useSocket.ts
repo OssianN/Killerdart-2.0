@@ -29,7 +29,6 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
 
     socket.current.onopen = () => {
       console.log('connected');
-      // socket.send(JSON.stringify({ type: 'auth', token }));
       setIsConnected(true);
     };
 
@@ -67,7 +66,6 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
     if (!socket.current) return;
 
     socket.current.onmessage = message => {
-      console.log({ message });
       const { player, points } = JSON.parse(message.data);
       const isSameData =
         savedData.current?.player == player &&

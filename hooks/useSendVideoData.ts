@@ -39,7 +39,6 @@ export const useSendVideoData = ({
     canvas.toBlob(
       blob => {
         if (blob && socket.readyState === WebSocket.OPEN) {
-          console.log(blob);
           socket.send(blob);
         }
       },

@@ -24,13 +24,15 @@ const PlayersContext = createContext<PlayersContextProps>({
   updatePlayer: () => {},
   handleClearStats: () => {},
   handleRemovePlayer: () => {},
-  setIsUpdatingPlayerNumber: () => false,
-  isUpdatingPlayerNumber: false,
+  setIsUpdatingPlayerNumber: () => null,
+  isUpdatingPlayerNumber: null,
 });
 
 export const PlayersProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [isUpdatingPlayerNumber, setIsUpdatingPlayerNumber] = useState(false);
+  const [isUpdatingPlayerNumber, setIsUpdatingPlayerNumber] = useState<
+    number | null
+  >(null);
 
   const addNewPlayer = useCallback((name: string) => {
     const newPlayer = { id: Date.now(), name, score: 0, number: null, wins: 0 };
@@ -140,6 +142,6 @@ type PlayersContextProps = {
   updatePlayer: (id: number, updatedPlayer: UpdatedPlayerProps) => void;
   handleClearStats: () => void;
   handleRemovePlayer: (playerId: number) => void;
-  setIsUpdatingPlayerNumber: Dispatch<SetStateAction<boolean>>;
-  isUpdatingPlayerNumber: boolean;
+  setIsUpdatingPlayerNumber: Dispatch<SetStateAction<number | null>>;
+  isUpdatingPlayerNumber: number | null;
 };

@@ -32,15 +32,13 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
   } = form;
 
   const onSubmit = (values: FormValues) => {
-    setIsUpdatingPlayerNumber(false);
+    setIsUpdatingPlayerNumber(null);
     updatePlayer(player.id, {
       number: parseInt(values.playerNumber, 10),
     });
   };
 
   const handleBlur = async () => {
-    if (!isDirty) return;
-
     const isValidForm = await trigger('playerNumber');
     if (isValidForm) {
       await form.handleSubmit(onSubmit)();
@@ -91,7 +89,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
           <Button
             type="submit"
             variant="outline"
-            disabled={!isValid || !isDirty || isSubmitting}
+            disabled={!isValid || isSubmitting}
             className="w-12 h-10 flex-shrink-0 rounded-r-md rounded-l-none border-none shadow-none disabled:opacity-50"
             aria-label="Submit player number"
           >

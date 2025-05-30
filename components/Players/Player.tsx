@@ -162,7 +162,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
 
             <Separator className="opacity-75" />
 
-            {!player.number || isUpdatingPlayerNumber ? (
+            {!player.number || isUpdatingPlayerNumber === player.id ? (
               <PlayerNumberForm player={player} />
             ) : (
               <div className="flex items-center justify-between w-full h-16 gap-6 py-3">
