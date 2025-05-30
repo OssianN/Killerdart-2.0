@@ -6,14 +6,10 @@ type PlayerNumberProps = {
 };
 
 export const PlayerNumber = ({ player }: PlayerNumberProps) => {
-  const { updatePlayer } = usePlayers();
+  const { setIsUpdatingPlayerNumber } = usePlayers();
   return (
     <div
-      onClick={() =>
-        updatePlayer(player.id, {
-          number: 0,
-        })
-      }
+      onClick={() => setIsUpdatingPlayerNumber(true)}
       className={`relative rounded-full
         w-8 h-8 mx-6 flex-shrink-0 flex items-center justify-center
         ${player.score === 5 ? 'text-app-red' : 'text-app-blue'}

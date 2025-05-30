@@ -6,6 +6,8 @@ import {
   useContext,
   ReactNode,
   useCallback,
+  type Dispatch,
+  type SetStateAction,
 } from 'react';
 
 export type UpdatedPlayerProps = {
@@ -22,11 +24,13 @@ const PlayersContext = createContext<PlayersContextProps>({
   updatePlayer: () => {},
   handleClearStats: () => {},
   handleRemovePlayer: () => {},
+  setIsUpdatingPlayerNumber: () => false,
+  isUpdatingPlayerNumber: false,
 });
 
-// fix  <0 & >5
 export const PlayersProvider = ({ children }: { children: ReactNode }) => {
   const [players, setPlayers] = useState<Player[]>([]);
+  const [isUpdatingPlayerNumber, setIsUpdatingPlayerNumber] = useState(false);
 
   const addNewPlayer = useCallback((name: string) => {
     const newPlayer = { id: Date.now(), name, score: 0, number: null, wins: 0 };
@@ -92,6 +96,8 @@ export const PlayersProvider = ({ children }: { children: ReactNode }) => {
         updatePlayer,
         handleClearStats,
         handleRemovePlayer,
+        setIsUpdatingPlayerNumber,
+        isUpdatingPlayerNumber,
       }}
     >
       {children}
@@ -126,8 +132,7 @@ const setLocalStorage = (players: Player[]) => {
   localStorage.setItem('players', JSON.stringify(players));
 };
 
-const changeScore = (newValue: number) => 
-  Math.max(0, Math.min(5, newValue));
+const changeScore = (newValue: number) => Math.max(0, Math.min(5, newValue));
 
 type PlayersContextProps = {
   players: Player[];
@@ -135,4 +140,6 @@ type PlayersContextProps = {
   updatePlayer: (id: number, updatedPlayer: UpdatedPlayerProps) => void;
   handleClearStats: () => void;
   handleRemovePlayer: (playerId: number) => void;
+  setIsUpdatingPlayerNumber: Dispatch<SetStateAction<boolean>>;
+  isUpdatingPlayerNumber: boolean;
 };

@@ -24,7 +24,7 @@ type PlayerProps = {
 
 export const PlayerItem = ({ player }: PlayerProps) => {
   const [isPresent, safeToRemove] = usePresence();
-  const { handleRemovePlayer } = usePlayers();
+  const { handleRemovePlayer, isUpdatingPlayerNumber } = usePlayers();
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
 
   const x = useMotionValue(0);
@@ -117,6 +117,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
 
   return (
     <motion.li
+      key={player.id}
       {...animations}
       className="relative overflow-hidden shadow-md rounded-md border-white border border-solid"
     >
@@ -159,17 +160,16 @@ export const PlayerItem = ({ player }: PlayerProps) => {
               </div>
             </header>
 
-            {!player.number ? (
+            <Separator className="opacity-75" />
+
+            {!player.number || isUpdatingPlayerNumber ? (
               <PlayerNumberForm player={player} />
             ) : (
-              <>
-                <Separator className="opacity-75" />
-                <div className="flex items-center justify-between w-full h-16 gap-6 py-3">
-                  <ScoreButton player={player} operator={'minus'} />
-                  <DartContainer playerScore={player.score} />
-                  <ScoreButton player={player} operator={'plus'} />
-                </div>
-              </>
+              <div className="flex items-center justify-between w-full h-16 gap-6 py-3">
+                <ScoreButton player={player} operator={'minus'} />
+                <DartContainer playerScore={player.score} />
+                <ScoreButton player={player} operator={'plus'} />
+              </div>
             )}
           </motion.div>
         </motion.div>
