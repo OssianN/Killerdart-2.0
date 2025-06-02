@@ -17,12 +17,13 @@ type UseSocketProps = {
 export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [isConnected, setIsConnected] = useState(false);
   // const [token, setToken] = useState<string | undefined>();
-  const uri = 'wss://hand-recognition-backend.onrender.com/ws?token=123';
+  const uri =
+    'wss://hand-recognition-backend-349388198137.europe-west1.run.app/ws?token=123';
   const savedData = useRef<PlayerData | null>(null);
   const socket = useRef<WebSocket | null>(null);
+  let attempts = 0;
 
   const connectWs = useCallback(() => {
-    let attempts = 0;
     socket.current = new WebSocket(uri);
 
     if (!socket.current) return;
@@ -40,25 +41,18 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
       console.error('WebSocket Error ', error);
 
       if (attempts > 5) {
-        attempts++;
         console.error('Max attempts reached. Closing socket.');
         socket.current?.close();
         return;
       }
 
-      connectWs();
-    };
-  }, []);
+      attempts++;
 
-  // useEffect(() => {
-  //   const getToken = async () => {
-  //     const {
-  //       props: { handRecognitionKey },
-  //     } = await getServerSideProps();
-  //     setToken(handRecognitionKey);
-  //   };
-  //   getToken();
-  // }, []);
+      setTimeout(() => {
+        connectWs();
+      }, 1000 * attempts);
+    };
+  }, [attempts]);
 
   useEffect(() => {
     connectWs();
@@ -68,8 +62,8 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
     socket.current.onmessage = message => {
       const { player, points } = JSON.parse(message.data);
       const isSameData =
-        savedData.current?.player == player &&
-        savedData.current?.points == points;
+        savedData.current?.player === player &&
+        savedData.current?.points === points;
 
       if (isSameData) return;
 
