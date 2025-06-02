@@ -52,10 +52,10 @@ export const VideoStream = () => {
   const startCamera = async () => {
     try {
       if (!videoRef.current) return;
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
-
       setStream(stream);
       videoRef.current.srcObject = stream;
     } catch (error) {
