@@ -65,8 +65,6 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
         savedData.current?.player === player &&
         savedData.current?.points === points;
 
-      console.log(player, points);
-
       if (isSameData) return;
 
       savedData.current = { player, points };
