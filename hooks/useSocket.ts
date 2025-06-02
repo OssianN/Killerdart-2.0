@@ -18,7 +18,7 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
   const [isConnected, setIsConnected] = useState(false);
   // const [token, setToken] = useState<string | undefined>();
   const uri =
-    'wss://hand-recognition-backend-349388198137.europe-west1.run.app/ws?token=123';
+    'wss://hand-recognition-backend-349308198137.europe-west1.run.app/ws?token=123';
   const savedData = useRef<PlayerData | null>(null);
   const socket = useRef<WebSocket | null>(null);
   let attempts = 0;
