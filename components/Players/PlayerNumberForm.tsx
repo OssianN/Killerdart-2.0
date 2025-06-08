@@ -72,7 +72,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
                 <FormControl>
                   <Input
                     {...field}
-                    className="w-full h-10 text-lg text-app-blue bg-white rounded-l-md rounded-r-none placeholder:text-cyan-300 placeholder:text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-full h-10 text-lg text-app-blue bg-white rounded-l-md rounded-r-none placeholder:text-cyan-400 placeholder:text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     type="tel"
                     placeholder="Enter target (1-20)"
                     inputMode="numeric"
@@ -90,7 +90,7 @@ export function PlayerNumberForm({ player }: PlayerNumberFormProps) {
             type="submit"
             variant="outline"
             disabled={!isValid || isSubmitting}
-            className="w-12 h-10 flex-shrink-0 rounded-r-md rounded-l-none border-none shadow-none disabled:opacity-50"
+            className="w-12 h-10 flex-shrink-0 rounded-r-md rounded-l-none border-none shadow-none disabled:text-cyan-300 disabled:opacity-100"
             aria-label="Submit player number"
           >
             <Check />

@@ -39,6 +39,7 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
 
     socket.current.onerror = error => {
       console.error('WebSocket Error ', error);
+      attempts++;
 
       if (attempts > 5) {
         console.error('Max attempts reached. Closing socket.');
@@ -46,17 +47,13 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
         return;
       }
 
-      attempts++;
-
       setTimeout(() => {
         connectWs();
       }, 1000 * attempts);
     };
   }, [attempts]);
 
-  useEffect(() => {
-    connectWs();
-
+  const handleMessage = useCallback(() => {
     if (!socket.current) return;
 
     socket.current.onmessage = message => {
@@ -70,9 +67,14 @@ export const useSocket = ({ onMessage }: UseSocketProps) => {
       savedData.current = { player, points };
       onMessage({ player: Number(player), points: Number(points) });
     };
+  }, [onMessage]);
+
+  useEffect(() => {
+    connectWs();
+    handleMessage();
 
     return () => socket.current?.close();
-  }, [connectWs, onMessage, socket]);
+  }, [connectWs, handleMessage, socket]);
 
   return { socket: socket.current, isConnected };
 };

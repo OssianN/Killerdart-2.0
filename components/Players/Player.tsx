@@ -44,11 +44,7 @@ export const PlayerItem = ({ player }: PlayerProps) => {
 
   const animateX = useCallback(
     (to: number) => {
-      animate(x, to, {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-      });
+      animate(x, to);
     },
     [x]
   );
